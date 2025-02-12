@@ -1,0 +1,9 @@
+package ze.mystoragemanagement.service;
+
+/**
+* @Author : Ze Li
+* @Date : 12/02/2025 15:43
+* @Version : V1.0
+* @Description : 
+*/public interface DishRecordService {
+}
