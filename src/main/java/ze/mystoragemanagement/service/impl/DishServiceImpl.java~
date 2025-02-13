@@ -64,6 +64,8 @@ public class DishServiceImpl implements DishService {
     @Override
     public Dish updateDish(Long dishId, Dish dish) {
         dish.setDishId(dishId);
+        Dish debug = dishRepository.findById(dishId).orElse(null);
+        debug.getDishIngredients().clear();
         return saveDish(dish);
     }
 

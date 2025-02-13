@@ -28,7 +28,7 @@ public class DishRecord {
             CascadeType.REFRESH
     })
     @JoinColumn(name = "dish_name", nullable = false)
-    private Dish dishName;
+    private Dish dish;
 
     public Long getDishRecordId() {
         return dishRecordId;
@@ -54,21 +54,21 @@ public class DishRecord {
         this.dishRecordDesc = dishRecordDesc;
     }
 
-    public Dish getDishName() {
-        return dishName;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setDishName(Dish dishName) {
-        this.dishName = dishName;
+    public void setDish(Dish dishName) {
+        this.dish = dishName;
     }
 
     public DishRecord() {
     }
 
-    public DishRecord(Long dishRecordId, LocalDateTime dishRecordTime, String dishRecordDesc, Dish dishName) {
+    public DishRecord(Long dishRecordId, LocalDateTime dishRecordTime, String dishRecordDesc, Dish dish) {
         this.dishRecordId = dishRecordId;
         this.dishRecordTime = dishRecordTime;
         this.dishRecordDesc = dishRecordDesc;
-        this.dishName = dishName;
+        this.dish = dish;
     }
 }

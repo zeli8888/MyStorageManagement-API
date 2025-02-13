@@ -19,7 +19,7 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dishId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String dishName;
 
     public String getDishName() {

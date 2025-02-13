@@ -2,7 +2,10 @@ package ze.mystoragemanagement.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ze.mystoragemanagement.model.Dish;
 import ze.mystoragemanagement.model.Ingredient;
+
+import java.util.Optional;
 
 /**
  * @Author : Ze Li
@@ -13,4 +16,5 @@ import ze.mystoragemanagement.model.Ingredient;
 
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
+    Optional<Ingredient> findIngredientByIngredientName(String ingredientName);
 }
