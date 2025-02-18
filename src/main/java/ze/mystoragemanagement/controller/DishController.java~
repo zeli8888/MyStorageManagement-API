@@ -58,13 +58,8 @@ public class DishController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PutMapping("/dishes/{dishId}")
-//    public ResponseEntity<Dish> updateDish(@PathVariable Long dishId, @RequestBody Dish dish) {
-//        return ResponseEntity.ok(dishService.updateDish(dishId, dish));
-//    }
-
     @PutMapping("/dishes/{dishId}")
-    public ResponseEntity<Dish> updateDish(@PathVariable Long dishId, @RequestBody DishIngredientDTO dishIngredientDTO) {
-        return ResponseEntity.ok(dishService.updateDish(dishId, dishIngredientDTO));
+    public ResponseEntity<Dish> updateDish(@PathVariable Long dishId, @RequestBody Dish dish) {
+        return ResponseEntity.ok(dishService.updateDish(dishId, dish));
     }
 }

@@ -1,0 +1,10 @@
+package ze.mystoragemanagement.dto;
+
+/**
+ * @Author : Ze Li
+ * @Date : 17/02/2025 22:42
+ * @Version : V1.0
+ * @Description :
+ */
+public class DishRecordIngredientDTO {
+}

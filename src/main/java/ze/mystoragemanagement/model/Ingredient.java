@@ -29,13 +29,25 @@ public class Ingredient {
 
     private String ingredientDesc;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "dishIngredients", cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH
-    })
+//    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "dishIngredients", cascade = {
+//            CascadeType.PERSIST,
+//            CascadeType.MERGE,
+//            CascadeType.REFRESH
+//    })
+//    @JsonIgnore
+//    private Set<Dish> dishes = new HashSet<>();
+
+    public Set<DishIngredient> getDishIngredients() {
+        return dishIngredients;
+    }
+
+    public void setDishIngredients(Set<DishIngredient> dishIngredients) {
+        this.dishIngredients = dishIngredients;
+    }
+
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnore
-    private Set<Dish> dishes = new HashSet<>();
+    private Set<DishIngredient> dishIngredients = new HashSet<>();
 
     public Long getIngredientId() {
         return ingredientId;
@@ -77,23 +89,23 @@ public class Ingredient {
         this.ingredientDesc = ingredientDesc;
     }
 
-    public void setDishes(Set<Dish> dishes) {
-        this.dishes = dishes;
+    public void setDishes(Set<DishIngredient> dishIngredients) {
+        this.dishIngredients = dishIngredients;
     }
 
     public Ingredient() {
     }
 
-    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc, Set<Dish> dishes) {
+    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc, Set<DishIngredient> dishIngredients) {
         this.ingredientId = ingredientId;
         this.ingredientName = ingredientName;
         this.ingredientStorage = ingredientStorage;
         this.ingredientCost = ingredientCost;
         this.ingredientDesc = ingredientDesc;
-        this.dishes = dishes;
+        this.dishIngredients = dishIngredients;
     }
 
-    public Set<Dish> getDishes() {
-        return dishes;
+    public Set<DishIngredient> getDishes() {
+        return dishIngredients;
     }
 }

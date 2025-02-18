@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ze.mystoragemanagement.exception.IngredientNotFoundException;
 import ze.mystoragemanagement.model.Dish;
+import ze.mystoragemanagement.model.DishIngredient;
 import ze.mystoragemanagement.model.Ingredient;
+import ze.mystoragemanagement.repository.DishIngredientRepository;
 import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.service.IngredientService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +27,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Autowired
     private IngredientRepository ingredientRepository;
     @Autowired
-    private DishRepository dishRepository;
+    private DishIngredientRepository dishIngredientRepository;
 
     @Override
     public List<Ingredient> getAllIngredients() {
@@ -43,12 +46,19 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void deleteIngredient(Long id) {
+//        Ingredient ingredient = ingredientRepository.findById(id).orElseThrow(()->new IngredientNotFoundException(id.toString()));
+//        if (ingredient.getDishes() != null) {
+//            for (Dish dish : ingredient.getDishes()) {
+//                dish.getDishIngredients().remove(ingredient);
+//                // still work without dishRepository.save, may be because CascadeType.REFRESH
+////                dishRepository.save(dish);
+//            }
+//        }
         Ingredient ingredient = ingredientRepository.findById(id).orElseThrow(()->new IngredientNotFoundException(id.toString()));
-        if (ingredient.getDishes() != null) {
-            for (Dish dish : ingredient.getDishes()) {
-                dish.getDishIngredients().remove(ingredient);
-                // still work without dishRepository.save, may be because CascadeType.REFRESH
-//                dishRepository.save(dish);
+        if (ingredient.getDishIngredients() != null) {
+            for (DishIngredient dishIngredient : ingredient.getDishIngredients()) {
+                dishIngredient.getDish().getDishIngredients().remove(dishIngredient);
+                dishIngredientRepository.deleteById(dishIngredient.getDishIngredientId());
             }
         }
         ingredientRepository.deleteById(id);

@@ -30,7 +30,7 @@ public class Dish {
         this.dishName = dishName;
     }
 
-    public Dish(Long dishId, String dishName, String dishDesc, Set<Ingredient> dishIngredients) {
+    public Dish(Long dishId, String dishName, String dishDesc, Set<DishIngredient> dishIngredients) {
         this.dishId = dishId;
         this.dishName = dishName;
         this.dishDesc = dishDesc;
@@ -39,15 +39,18 @@ public class Dish {
 
     private String dishDesc;
 
-    @ManyToMany(fetch=FetchType.EAGER, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH
-    })
-    @JoinTable(name = "dish_ingredient",
-            joinColumns = @JoinColumn(name = "dish_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
-    private Set<Ingredient> dishIngredients = new HashSet<>();
+//    @ManyToMany(fetch=FetchType.EAGER, cascade = {
+//            CascadeType.PERSIST,
+//            CascadeType.MERGE,
+//            CascadeType.REFRESH
+//    })
+//    @JoinTable(name = "dish_ingredient",
+//            joinColumns = @JoinColumn(name = "dish_id"),
+//            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+//    private Set<Ingredient> dishIngredients = new HashSet<>();
+
+    @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private Set<DishIngredient> dishIngredients = new HashSet<>();
 
     public Dish() {
     }
@@ -68,15 +71,15 @@ public class Dish {
         this.dishDesc = dishDesc;
     }
 
-    public Set<Ingredient> getDishIngredients() {
+    public Set<DishIngredient> getDishIngredients() {
         return dishIngredients;
     }
 
-    public void setDishIngredients(Set<Ingredient> ingredients) {
+    public void setDishIngredients(Set<DishIngredient> ingredients) {
         this.dishIngredients = ingredients;
     }
 
-    public Dish(Long dishId, String dishDesc, Set<Ingredient> dishIngredients) {
+    public Dish(Long dishId, String dishDesc, Set<DishIngredient> dishIngredients) {
         this.dishId = dishId;
         this.dishDesc = dishDesc;
         this.dishIngredients = dishIngredients;
