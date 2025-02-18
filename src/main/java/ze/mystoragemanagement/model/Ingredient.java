@@ -29,6 +29,13 @@ public class Ingredient {
 
     private String ingredientDesc;
 
+    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc) {
+        this.ingredientId = ingredientId;
+        this.ingredientName = ingredientName;
+        this.ingredientStorage = ingredientStorage;
+        this.ingredientCost = ingredientCost;
+        this.ingredientDesc = ingredientDesc;
+    }
 //    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "dishIngredients", cascade = {
 //            CascadeType.PERSIST,
 //            CascadeType.MERGE,
@@ -45,7 +52,7 @@ public class Ingredient {
         this.dishIngredients = dishIngredients;
     }
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
