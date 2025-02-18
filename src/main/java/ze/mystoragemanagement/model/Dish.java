@@ -49,7 +49,7 @@ public class Dish {
 //            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
 //    private Set<Ingredient> dishIngredients = new HashSet<>();
 
-    @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
     public Dish() {

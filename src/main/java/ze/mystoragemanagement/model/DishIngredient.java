@@ -17,13 +17,13 @@ public class DishIngredient {
     private DishIngredientId dishIngredientId;
     private Long dishIngredientQuantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade= {CascadeType.ALL})
     @MapsId("dishId")
     @JoinColumn(name = "dish_id")
     @JsonIgnore
     private Dish dish;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade= {CascadeType.ALL})
     @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id")
     @JsonIgnore

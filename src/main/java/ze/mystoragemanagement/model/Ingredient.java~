@@ -45,7 +45,7 @@ public class Ingredient {
         this.dishIngredients = dishIngredients;
     }
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, orphanRemoval = true)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JsonIgnore
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
