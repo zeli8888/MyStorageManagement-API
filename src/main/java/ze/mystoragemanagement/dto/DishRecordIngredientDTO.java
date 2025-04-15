@@ -1,5 +1,7 @@
 package ze.mystoragemanagement.dto;
 
+import ze.mystoragemanagement.model.DishRecord;
+
 /**
  * @Author : Ze Li
  * @Date : 17/02/2025 22:42
@@ -7,4 +9,30 @@ package ze.mystoragemanagement.dto;
  * @Description :
  */
 public class DishRecordIngredientDTO {
+    private DishRecord dishRecord;
+    private IngredientIdQuantityDTO[] ingredientIdQuantityList;
+
+    public DishRecord getDishRecord() {
+        return dishRecord;
+    }
+
+    public void setDishRecord(DishRecord dishRecord) {
+        this.dishRecord = dishRecord;
+    }
+
+    public IngredientIdQuantityDTO[] getIngredientIdQuantityList() {
+        return ingredientIdQuantityList;
+    }
+
+    public void setIngredientIdQuantityList(IngredientIdQuantityDTO[] ingredientIdQuantityList) {
+        this.ingredientIdQuantityList = ingredientIdQuantityList;
+    }
+
+    public DishRecordIngredientDTO(DishRecord dishRecord, IngredientIdQuantityDTO[] ingredientIdQuantityList) {
+        this.dishRecord = dishRecord;
+        this.ingredientIdQuantityList = ingredientIdQuantityList;
+    }
+
+    public DishRecordIngredientDTO() {
+    }
 }

@@ -56,24 +56,6 @@ public class Ingredient {
     @JsonIgnore
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
-    public Set<DishRecordIngredient> getDishRecordIngredients() {
-        return dishRecordIngredients;
-    }
-
-    public void setDishRecordIngredients(Set<DishRecordIngredient> dishRecordIngredients) {
-        this.dishRecordIngredients = dishRecordIngredients;
-    }
-
-    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc, Set<DishIngredient> dishIngredients, Set<DishRecordIngredient> dishRecordIngredients) {
-        this.ingredientId = ingredientId;
-        this.ingredientName = ingredientName;
-        this.ingredientStorage = ingredientStorage;
-        this.ingredientCost = ingredientCost;
-        this.ingredientDesc = ingredientDesc;
-        this.dishIngredients = dishIngredients;
-        this.dishRecordIngredients = dishRecordIngredients;
-    }
-
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
