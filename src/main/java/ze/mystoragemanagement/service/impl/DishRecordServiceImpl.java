@@ -2,12 +2,15 @@ package ze.mystoragemanagement.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ze.mystoragemanagement.dto.DishIngredientDTO;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
+import ze.mystoragemanagement.exception.DishNotFoundException;
 import ze.mystoragemanagement.exception.IngredientNotFoundException;
 import ze.mystoragemanagement.model.*;
 import ze.mystoragemanagement.repository.DishRecordRepository;
+import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.service.DishRecordService;
 
@@ -23,27 +26,32 @@ import java.util.List;
 @Service
 public class DishRecordServiceImpl implements DishRecordService {
     @Autowired
-    private DishRecordRepository DishRecordRepository;
-    @Autowired
     private IngredientRepository ingredientRepository;
+    @Autowired
+    private DishRecordRepository dishRecordRepository;
+    @Autowired
+    private DishRepository dishRepository;
 
     @Override
     public List<DishRecord> getAllDishRecords() {
-        return DishRecordRepository.findAll();
+        return dishRecordRepository.findAll();
     }
 
     @Override
     public DishRecord getDishRecordById(Long dishRecordId) {
-        return DishRecordRepository.findById(dishRecordId).orElse(null);
+        return dishRecordRepository.findById(dishRecordId).orElse(null);
     }
 
+    @Transactional
     @Override
-    public DishRecord createDishRecord(DishRecord dishRecord) {
-        return DishRecordRepository.save(dishRecord);
+    public DishRecord createDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO) {
+        return saveDishRecord(dishRecordIngredientDTO);
     }
 
     private DishRecord saveDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO){
         DishRecord dishRecord = dishRecordIngredientDTO.getDishRecord();
+        Dish dish = dishRecord.getDish();
+        dishRecord.setDish(dishRepository.findDishByDishName(dish.getDishName()).orElseThrow(()->new DishNotFoundException("name "+dish.getDishName())));
         dishRecord.setDishRecordIngredients(new HashSet<>());
         IngredientIdQuantityDTO[] ingredientIdQuantityList = dishRecordIngredientDTO.getIngredientIdQuantityList();
         if (ingredientIdQuantityList != null) {
@@ -51,20 +59,22 @@ public class DishRecordServiceImpl implements DishRecordService {
                 long ingredientId = ingredientIdQuantity.getIngredientId();
                 Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(()->new IngredientNotFoundException("id "+ingredientId));
                 long quantity = ingredientIdQuantity.getQuantity();
-                DishIngredient dishIngredient = new DishIngredient(new DishIngredientId(dish.getDishId(), ingredientId), quantity, dish, ingredient);
-                dish.getDishIngredients().add(dishIngredient);
+                DishRecordIngredient dishRecordIngredient = new DishRecordIngredient(new DishRecordIngredientId(ingredientId, dishRecord.getDishRecordId()), quantity, dishRecord, ingredient);
+                dishRecord.getDishRecordIngredients().add(dishRecordIngredient);
             }
         }
-        return dishRepository.save(dish);
+        return dishRecordRepository.save(dishRecord);
     }
+
+    @Transactional
     @Override
-    public DishRecord updateDishRecord(Long dishRecordId, DishRecord dishRecord) {
-        dishRecord.setDishRecordId(dishRecordId);
-        return DishRecordRepository.save(dishRecord);
+    public DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dishRecordIngredientDTO) {
+        dishRecordIngredientDTO.getDishRecord().setDishRecordId(dishRecordId);
+        return saveDishRecord(dishRecordIngredientDTO);
     }
 
     @Override
     public void deleteDishRecord(Long dishRecordId) {
-        DishRecordRepository.deleteById(dishRecordId);
+        dishRecordRepository.deleteById(dishRecordId);
     }
 }

@@ -78,10 +78,4 @@ public class Dish {
     public void setDishIngredients(Set<DishIngredient> ingredients) {
         this.dishIngredients = ingredients;
     }
-
-    public Dish(Long dishId, String dishDesc, Set<DishIngredient> dishIngredients) {
-        this.dishId = dishId;
-        this.dishDesc = dishDesc;
-        this.dishIngredients = dishIngredients;
-    }
 }

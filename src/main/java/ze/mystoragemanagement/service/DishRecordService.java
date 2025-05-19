@@ -1,5 +1,6 @@
 package ze.mystoragemanagement.service;
 
+import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.model.DishRecord;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface DishRecordService {
     List<DishRecord> getAllDishRecords();
     DishRecord getDishRecordById(Long dishRecordId);
-    DishRecord createDishRecord(DishRecord dishRecord);
-    DishRecord updateDishRecord(Long dishRecordId, DishRecord dishRecord);
+    DishRecord createDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO);
+    DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dishRecordIngredientDTO);
     void deleteDishRecord(Long dishRecordId);
 }

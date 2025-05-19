@@ -85,11 +85,4 @@ public class DishRecord {
 
     public DishRecord() {
     }
-
-    public DishRecord(Long dishRecordId, LocalDateTime dishRecordTime, String dishRecordDesc, Dish dish) {
-        this.dishRecordId = dishRecordId;
-        this.dishRecordTime = dishRecordTime;
-        this.dishRecordDesc = dishRecordDesc;
-        this.dish = dish;
-    }
 }

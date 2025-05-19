@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.model.DishRecord;
 import ze.mystoragemanagement.service.DishRecordService;
 
@@ -33,15 +34,15 @@ public class DishRecordController {
     }
 
     @PostMapping("/dishrecords")
-    public ResponseEntity<DishRecord> createDishRecord(@RequestBody DishRecord dishRecord) {
-        DishRecord createdDishRecord = dishRecordService.createDishRecord(dishRecord);
+    public ResponseEntity<DishRecord> createDishRecord(@RequestBody DishRecordIngredientDTO dishRecordIngredientDTO) {
+        DishRecord createdDishRecord = dishRecordService.createDishRecord(dishRecordIngredientDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{dishRecordId}").buildAndExpand(createdDishRecord.getDishRecordId()).toUri();
         return ResponseEntity.created(uri).body(createdDishRecord);
     }
 
     @PutMapping("/dishrecords/{dishRecordId}")
-    public ResponseEntity<DishRecord> updateDishRecord(@PathVariable Long dishRecordId, @RequestBody DishRecord dishRecord) {
-        return ResponseEntity.ok(dishRecordService.updateDishRecord(dishRecordId, dishRecord));
+    public ResponseEntity<DishRecord> updateDishRecord(@PathVariable Long dishRecordId, @RequestBody DishRecordIngredientDTO dishRecordIngredientDTO) {
+        return ResponseEntity.ok(dishRecordService.updateDishRecord(dishRecordId, dishRecordIngredientDTO));
     }
 
     @DeleteMapping("/dishrecords/{dishRecordId}")
