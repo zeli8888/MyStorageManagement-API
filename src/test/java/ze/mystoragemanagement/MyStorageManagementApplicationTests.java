@@ -17,8 +17,7 @@ import ze.mystoragemanagement.service.IngredientService;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MyStorageManagementApplicationTests {
@@ -74,14 +73,20 @@ class MyStorageManagementApplicationTests {
                 new IngredientIdQuantityDTO(1L, 2L), new IngredientIdQuantityDTO(4L, 2L)
         }));
 
+        assertEquals(2, dishRecordService.getDishRecordById(1L).getDishRecordIngredients().size());
+        assertEquals(2, dishRecordService.getDishRecordById(2L).getDishRecordIngredients().size());
         ingredientService.deleteIngredient(1L);
 
         assertNull(ingredientService.getIngredientById(1L));
         assertEquals(1, dishRecordService.getDishRecordById(1L).getDishRecordIngredients().size());
-        assertEquals(1, dishRecordService.getDishRecordById(1L).getDishRecordIngredients().size());
+        assertEquals(1, dishRecordService.getDishRecordById(2L).getDishRecordIngredients().size());
 
         assertEquals(1, dishService.getDishByName("test1").getDishIngredients().size());
         assertEquals(1, dishService.getDishByName("test2").getDishIngredients().size());
+
+        dishRecordService.deleteDishRecord(1L);
+        assertNull(dishRecordService.getDishRecordById(1L));
+        assertNotNull(dishService.getDishById(1L));
     }
 
 }
