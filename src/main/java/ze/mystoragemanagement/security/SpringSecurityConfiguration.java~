@@ -32,6 +32,7 @@ public class SpringSecurityConfiguration {
         http.headers(headers -> headers.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", frontendUrl)));
 
         CorsConfiguration configuration = new CorsConfiguration();
+        System.out.println("Frontend URL: " + frontendUrl);
         configuration.setAllowedOrigins(Collections.singletonList(frontendUrl));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));

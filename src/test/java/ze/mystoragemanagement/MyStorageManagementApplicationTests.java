@@ -36,6 +36,34 @@ class MyStorageManagementApplicationTests {
     }
 
     @Test
+    void getAllDishes () {
+        Ingredient ingredient1 = new Ingredient(null, "test1", 1L, 1L, "test");
+        Ingredient ingredient2 = new Ingredient(null, "test2", 1L, 1L, "test");
+        Ingredient ingredient3 = new Ingredient(null, "test3", 1L, 1L, "test");
+        Ingredient ingredient4 = new Ingredient(null, "test4", 1L, 1L, "test");
+
+        ingredientService.createIngredient(ingredient1);
+        ingredientService.createIngredient(ingredient2);
+        ingredientService.createIngredient(ingredient3);
+        ingredientService.createIngredient(ingredient4);
+
+        Dish dish1 = new Dish(null, "test1", "test1", new HashSet<>());
+        Dish dish2 = new Dish(null, "test2", "test2", new HashSet<>());
+        Dish dish3 = new Dish(null, "test3", "test3", new HashSet<>());
+        Dish dish4 = new Dish(null, "test4", "test4", new HashSet<>());
+
+        dishService.createDish(new DishIngredientDTO(dish1, new IngredientIdQuantityDTO[]{
+                new IngredientIdQuantityDTO(1L, 1L), new IngredientIdQuantityDTO(2L, 1L)
+        }));
+
+        dishService.createDish(new DishIngredientDTO(dish2, new IngredientIdQuantityDTO[]{
+                new IngredientIdQuantityDTO(1L, 1L), new IngredientIdQuantityDTO(3L, 1L)
+        }));
+
+        dishService.getAllDishes();
+    }
+
+    @Test
     void deleteIngredient() {
         Ingredient ingredient1 = new Ingredient(null, "test1", 1L, 1L, "test");
         Ingredient ingredient2 = new Ingredient(null, "test2", 1L, 1L, "test");
