@@ -22,11 +22,6 @@ public class Dish {
     @Column(unique = true, nullable = false)
     private String dishName;
 
-    private String dishDesc;
-
-    @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DishIngredient> dishIngredients = new HashSet<>();
-
     public String getDishName() {
         return dishName;
     }
@@ -41,6 +36,11 @@ public class Dish {
         this.dishDesc = dishDesc;
         this.dishIngredients = dishIngredients;
     }
+
+    private String dishDesc;
+
+    @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DishIngredient> dishIngredients = new HashSet<>();
 
     public Dish() {
     }

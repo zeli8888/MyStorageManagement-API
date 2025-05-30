@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ze.mystoragemanagement.dto.DishIngredientDTO;
-import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
+import ze.mystoragemanagement.dto.IngredientNameQuantityDTO;
 import ze.mystoragemanagement.exception.IngredientNotFoundException;
 import ze.mystoragemanagement.model.Dish;
 import ze.mystoragemanagement.model.DishIngredient;
@@ -86,20 +86,15 @@ public class DishServiceImpl implements DishService {
     private Dish saveDish(DishIngredientDTO dishIngredientDTO){
         Dish dish = dishIngredientDTO.getDish();
         dish.setDishIngredients(new HashSet<>());
-        IngredientIdQuantityDTO[] ingredientIdQuantityList = dishIngredientDTO.getIngredientIdQuantityList();
-        if (ingredientIdQuantityList != null) {
-            for (IngredientIdQuantityDTO ingredientIdQuantity : ingredientIdQuantityList){
-                long ingredientId = ingredientIdQuantity.getIngredientId();
-                Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(()->new IngredientNotFoundException("id "+ingredientId));
-                long quantity = ingredientIdQuantity.getQuantity();
-                DishIngredient dishIngredient = new DishIngredient(new DishIngredientId(dish.getDishId(), ingredientId), quantity, dish, ingredient);
+        IngredientNameQuantityDTO[] ingredientNameQuantityList = dishIngredientDTO.getIngredientIdQuantityList();
+        if (ingredientNameQuantityList != null) {
+            for (IngredientNameQuantityDTO ingredientNameQuantity : ingredientNameQuantityList){
+                String ingredientName = ingredientNameQuantity.getIngredientName();
+                Ingredient ingredient = ingredientRepository.findIngredientByIngredientName(ingredientName).orElseThrow(()->new IngredientNotFoundException("id "+ingredientName));
+                long quantity = ingredientNameQuantity.getQuantity();
+                DishIngredient dishIngredient = new DishIngredient(quantity, dish, ingredient);
+                dish.getDishIngredients().add(dishIngredient);
             }
-            HashSet<Ingredient> ingredientsStored = new HashSet<>();
-            for (Ingredient ingredient : ingredients) {
-                Ingredient ingredientStored = ingredientRepository.findById(ingredient.getIngredientId()).orElseThrow(()->new IngredientNotFoundException(ingredient.getIngredientName()));
-                ingredientsStored.add(ingredientStored);
-            }
-            dish.setDishIngredients(ingredientsStored);
         }
         return dishRepository.save(dish);
     }

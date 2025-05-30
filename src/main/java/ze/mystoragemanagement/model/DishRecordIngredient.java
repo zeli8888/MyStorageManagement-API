@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 @Table(name = "dish_record_ingredient")
 public class DishRecordIngredient {
     @EmbeddedId
+    @JsonIgnore
     private DishRecordIngredientId dishRecordIngredientId;
     private Long dishRecordIngredientQuantity;
 
@@ -25,11 +26,17 @@ public class DishRecordIngredient {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id")
-    @JsonIgnore
     private Ingredient ingredient;
 
 
     public DishRecordIngredient() {
+    }
+
+    public DishRecordIngredient(DishRecordIngredientId dishRecordIngredientId, Long dishRecordIngredientQuantity, DishRecord dishRecord, Ingredient ingredient) {
+        this.dishRecordIngredientId = dishRecordIngredientId;
+        this.dishRecordIngredientQuantity = dishRecordIngredientQuantity;
+        this.dishRecord = dishRecord;
+        this.ingredient = ingredient;
     }
 
     public DishRecordIngredientId getDishRecordIngredientId() {
@@ -64,10 +71,4 @@ public class DishRecordIngredient {
         this.ingredient = ingredient;
     }
 
-    public DishRecordIngredient(DishRecordIngredientId dishRecordIngredientId, Long dishRecordIngredientQuantity, DishRecord dishRecord, Ingredient ingredient) {
-        this.dishRecordIngredientId = dishRecordIngredientId;
-        this.dishRecordIngredientQuantity = dishRecordIngredientQuantity;
-        this.dishRecord = dishRecord;
-        this.ingredient = ingredient;
-    }
 }

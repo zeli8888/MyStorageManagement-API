@@ -29,40 +29,13 @@ public class Ingredient {
 
     private String ingredientDesc;
 
-    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc) {
-        this.ingredientId = ingredientId;
-        this.ingredientName = ingredientName;
-        this.ingredientStorage = ingredientStorage;
-        this.ingredientCost = ingredientCost;
-        this.ingredientDesc = ingredientDesc;
-    }
-//    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "dishIngredients", cascade = {
-//            CascadeType.PERSIST,
-//            CascadeType.MERGE,
-//            CascadeType.REFRESH
-//    })
-//    @JsonIgnore
-//    private Set<Dish> dishes = new HashSet<>();
-
-    public Set<DishIngredient> getDishIngredients() {
-        return dishIngredients;
-    }
-
-    public void setDishIngredients(Set<DishIngredient> dishIngredients) {
-        this.dishIngredients = dishIngredients;
-    }
-
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
-    public Set<DishRecordIngredient> getDishRecordIngredients() {
-        return dishRecordIngredients;
-    }
-
-    public void setDishRecordIngredients(Set<DishRecordIngredient> dishRecordIngredients) {
-        this.dishRecordIngredients = dishRecordIngredients;
-    }
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
 
     public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc, Set<DishIngredient> dishIngredients, Set<DishRecordIngredient> dishRecordIngredients) {
         this.ingredientId = ingredientId;
@@ -74,9 +47,29 @@ public class Ingredient {
         this.dishRecordIngredients = dishRecordIngredients;
     }
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
+    public Ingredient(Long ingredientId, String ingredientName, Long ingredientCost, Long ingredientStorage, String ingredientDesc) {
+        this.ingredientDesc = ingredientDesc;
+        this.ingredientCost = ingredientCost;
+        this.ingredientStorage = ingredientStorage;
+        this.ingredientName = ingredientName;
+        this.ingredientId = ingredientId;
+    }
+
+    public Set<DishIngredient> getDishIngredients() {
+        return dishIngredients;
+    }
+
+    public void setDishIngredients(Set<DishIngredient> dishIngredients) {
+        this.dishIngredients = dishIngredients;
+    }
+
+    public Set<DishRecordIngredient> getDishRecordIngredients() {
+        return dishRecordIngredients;
+    }
+
+    public void setDishRecordIngredients(Set<DishRecordIngredient> dishRecordIngredients) {
+        this.dishRecordIngredients = dishRecordIngredients;
+    }
 
     public Long getIngredientId() {
         return ingredientId;
@@ -118,23 +111,7 @@ public class Ingredient {
         this.ingredientDesc = ingredientDesc;
     }
 
-    public void setDishes(Set<DishIngredient> dishIngredients) {
-        this.dishIngredients = dishIngredients;
-    }
-
     public Ingredient() {
     }
 
-    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc, Set<DishIngredient> dishIngredients) {
-        this.ingredientId = ingredientId;
-        this.ingredientName = ingredientName;
-        this.ingredientStorage = ingredientStorage;
-        this.ingredientCost = ingredientCost;
-        this.ingredientDesc = ingredientDesc;
-        this.dishIngredients = dishIngredients;
-    }
-
-    public Set<DishIngredient> getDishes() {
-        return dishIngredients;
-    }
 }

@@ -32,12 +32,10 @@ public class DishRecord {
     @JoinColumn(name = "dish_name", nullable = false)
     private Dish dish;
 
-    public Set<DishRecordIngredient> getDishRecordIngredients() {
-        return dishRecordIngredients;
-    }
+    @OneToMany(mappedBy = "dishRecord", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
 
-    public void setDishRecordIngredients(Set<DishRecordIngredient> dishRecordIngredients) {
-        this.dishRecordIngredients = dishRecordIngredients;
+    public DishRecord() {
     }
 
     public DishRecord(Long dishRecordId, LocalDateTime dishRecordTime, String dishRecordDesc, Dish dish, Set<DishRecordIngredient> dishRecordIngredients) {
@@ -48,8 +46,14 @@ public class DishRecord {
         this.dishRecordIngredients = dishRecordIngredients;
     }
 
-    @OneToMany(mappedBy = "dishRecord", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
+
+    public Set<DishRecordIngredient> getDishRecordIngredients() {
+        return dishRecordIngredients;
+    }
+
+    public void setDishRecordIngredients(Set<DishRecordIngredient> dishRecordIngredients) {
+        this.dishRecordIngredients = dishRecordIngredients;
+    }
 
     public Long getDishRecordId() {
         return dishRecordId;
@@ -83,6 +87,4 @@ public class DishRecord {
         this.dish = dishName;
     }
 
-    public DishRecord() {
-    }
 }

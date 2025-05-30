@@ -14,6 +14,7 @@ import jakarta.persistence.*;
 @Table(name = "dish_ingredient")
 public class DishIngredient {
     @EmbeddedId
+    @JsonIgnore
     private DishIngredientId dishIngredientId;
     private Long dishIngredientQuantity;
 
@@ -26,7 +27,6 @@ public class DishIngredient {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id")
-    @JsonIgnore
     private Ingredient ingredient;
 
     public DishIngredientId getDishIngredientId() {
