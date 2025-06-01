@@ -115,6 +115,16 @@ class MyStorageManagementApplicationTests {
         dishRecordService.deleteDishRecord(1L);
         assertNull(dishRecordService.getDishRecordById(1L));
         assertNotNull(dishService.getDishById(1L));
+
+        dishService.updateDish(1L, new DishIngredientDTO(dish1, new IngredientIdQuantityDTO[]{
+                new IngredientIdQuantityDTO(2L, 1L), new IngredientIdQuantityDTO(3L, 1L)
+        }));
+        assertEquals(2, dishService.getDishByName("test1").getDishIngredients().size());
+
+        dishService.updateDish(1L, new DishIngredientDTO(dish1, new IngredientIdQuantityDTO[]{
+                new IngredientIdQuantityDTO(2L, 1L)
+        }));
+        assertEquals(1, dishService.getDishByName("test1").getDishIngredients().size());
     }
 
 }
