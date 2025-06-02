@@ -56,10 +56,15 @@ public class DishRecordServiceImpl implements DishRecordService {
         IngredientIdQuantityDTO[] ingredientIdQuantityList = dishRecordIngredientDTO.getIngredientIdQuantityList();
         if (ingredientIdQuantityList != null) {
             for (IngredientIdQuantityDTO ingredientIdQuantity : ingredientIdQuantityList){
-                long ingredientId = ingredientIdQuantity.getIngredientId();
-                Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(()->new IngredientNotFoundException("id "+ingredientId));
+                Long ingredientId = ingredientIdQuantity.getIngredientId();
+                Ingredient ingredient;
+                if (ingredientId != null) {
+                    ingredient = ingredientRepository.findById(ingredientId).orElseThrow(()->new IngredientNotFoundException("id "+ingredientId));
+                }else{
+                    ingredient = ingredientRepository.findIngredientByIngredientName(ingredientIdQuantity.getIngredientName()).orElseThrow(()->new IngredientNotFoundException("name "+ingredientIdQuantity.getIngredientName()));
+                }
                 long quantity = ingredientIdQuantity.getQuantity();
-                DishRecordIngredient dishRecordIngredient = new DishRecordIngredient(new DishRecordIngredientId(ingredientId, dishRecord.getDishRecordId()), quantity, dishRecord, ingredient);
+                DishRecordIngredient dishRecordIngredient = new DishRecordIngredient(new DishRecordIngredientId(ingredient.getIngredientId(), dishRecord.getDishRecordId()), quantity, dishRecord, ingredient);
                 dishRecord.getDishRecordIngredients().add(dishRecordIngredient);
             }
         }

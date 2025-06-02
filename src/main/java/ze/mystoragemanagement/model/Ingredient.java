@@ -29,11 +29,11 @@ public class Ingredient {
 
     private String ingredientDesc;
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     @JsonIgnore
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     @JsonIgnore
     private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
 
