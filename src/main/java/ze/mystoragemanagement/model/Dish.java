@@ -1,6 +1,7 @@
 package ze.mystoragemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -17,14 +18,16 @@ import java.util.Set;
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.DishRecordView.class)
     private Long dishId;
 
     @Column(unique = true, nullable = false)
+    @JsonView(Views.DishRecordView.class)
     private String dishName;
 
     private String dishDesc;
 
-    @OneToMany(mappedBy = "dish", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
     public String getDishName() {

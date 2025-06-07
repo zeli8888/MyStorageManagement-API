@@ -1,11 +1,13 @@
 package ze.mystoragemanagement.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.model.DishRecord;
+import ze.mystoragemanagement.model.Views;
 import ze.mystoragemanagement.service.DishRecordService;
 
 import java.net.URI;
@@ -24,16 +26,19 @@ public class DishRecordController {
     private DishRecordService dishRecordService;
 
     @GetMapping("/dishrecords")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<List<DishRecord>> getAllDishRecords() {
         return ResponseEntity.ok(dishRecordService.getAllDishRecords());
     }
 
     @GetMapping("/dishrecords/{dishRecordId}")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<DishRecord> getDishRecordById(@PathVariable Long dishRecordId) {
         return ResponseEntity.ok(dishRecordService.getDishRecordById(dishRecordId));
     }
 
     @PostMapping("/dishrecords")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<DishRecord> createDishRecord(@RequestBody DishRecordIngredientDTO dishRecordIngredientDTO) {
         DishRecord createdDishRecord = dishRecordService.createDishRecord(dishRecordIngredientDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{dishRecordId}").buildAndExpand(createdDishRecord.getDishRecordId()).toUri();
@@ -41,11 +46,13 @@ public class DishRecordController {
     }
 
     @PutMapping("/dishrecords/{dishRecordId}")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<DishRecord> updateDishRecord(@PathVariable Long dishRecordId, @RequestBody DishRecordIngredientDTO dishRecordIngredientDTO) {
         return ResponseEntity.ok(dishRecordService.updateDishRecord(dishRecordId, dishRecordIngredientDTO));
     }
 
     @DeleteMapping("/dishrecords/{dishRecordId}")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<Void> deleteDishRecord(@PathVariable Long dishRecordId) {
         dishRecordService.deleteDishRecord(dishRecordId);
         return ResponseEntity.noContent().build();

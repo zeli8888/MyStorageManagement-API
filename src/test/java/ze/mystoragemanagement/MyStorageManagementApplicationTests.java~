@@ -58,16 +58,6 @@ class MyStorageManagementApplicationTests {
         }));
 
         dishService.getAllDishes();
-
-        DishRecord dishRecord1 = new DishRecord(null, LocalDateTime.now(), "testRecord1", dish1, new HashSet<>());
-        DishRecord dishRecord2 = new DishRecord(null, LocalDateTime.now(), "testRecord2", dish2, new HashSet<>());
-
-        dishRecordService.createDishRecord(new DishRecordIngredientDTO(dishRecord1, new IngredientIdQuantityDTO[]{
-                new IngredientIdQuantityDTO(1L, 1L), new IngredientIdQuantityDTO(2L, 1L)
-        }));
-        dishRecordService.createDishRecord(new DishRecordIngredientDTO(dishRecord2, new IngredientIdQuantityDTO[]{
-                new IngredientIdQuantityDTO(1L, 2L), new IngredientIdQuantityDTO(4L, 2L)
-        }));
     }
 
     @Test
