@@ -3,17 +3,15 @@ package ze.mystoragemanagement;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import ze.mystoragemanagement.dto.DishIngredientDTO;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
 import ze.mystoragemanagement.model.*;
-import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.service.DishRecordService;
 import ze.mystoragemanagement.service.DishService;
 import ze.mystoragemanagement.service.IngredientService;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,8 +57,8 @@ class MyStorageManagementApplicationTests {
 
         dishService.getAllDishes();
 
-        DishRecord dishRecord1 = new DishRecord(null, LocalDateTime.now(), "testRecord1", dish1, new HashSet<>());
-        DishRecord dishRecord2 = new DishRecord(null, LocalDateTime.now(), "testRecord2", dish2, new HashSet<>());
+        DishRecord dishRecord1 = new DishRecord(null, ZonedDateTime.now(), "testRecord1", dish1, new HashSet<>());
+        DishRecord dishRecord2 = new DishRecord(null, ZonedDateTime.now(), "testRecord2", dish2, new HashSet<>());
 
         dishRecordService.createDishRecord(new DishRecordIngredientDTO(dishRecord1, new IngredientIdQuantityDTO[]{
                 new IngredientIdQuantityDTO(1L, 1L), new IngredientIdQuantityDTO(2L, 1L)
@@ -95,11 +93,11 @@ class MyStorageManagementApplicationTests {
                 new IngredientIdQuantityDTO(1L, 1L), new IngredientIdQuantityDTO(3L, 1L)
         }));
 
-        DishRecord dishRecord1 = new DishRecord(null, LocalDateTime.now(), "testRecord1", dish1, new HashSet<>());
-        DishRecord dishRecord2 = new DishRecord(null, LocalDateTime.now(), "testRecord2", dish2, new HashSet<>());
-        DishRecord dishRecord3 = new DishRecord(null, LocalDateTime.now(), "testRecord3", dish3, new HashSet<>());
-        DishRecord dishRecord4 = new DishRecord(null, LocalDateTime.now(), "testRecord4", dish4, new HashSet<>());
-        DishRecord dishRecord5 = new DishRecord(null, LocalDateTime.now(), "testRecord5", dish4, new HashSet<>());
+        DishRecord dishRecord1 = new DishRecord(null, ZonedDateTime.now(), "testRecord1", dish1, new HashSet<>());
+        DishRecord dishRecord2 = new DishRecord(null, ZonedDateTime.now(), "testRecord2", dish2, new HashSet<>());
+        DishRecord dishRecord3 = new DishRecord(null, ZonedDateTime.now(), "testRecord3", dish3, new HashSet<>());
+        DishRecord dishRecord4 = new DishRecord(null, ZonedDateTime.now(), "testRecord4", dish4, new HashSet<>());
+        DishRecord dishRecord5 = new DishRecord(null, ZonedDateTime.now(), "testRecord5", dish4, new HashSet<>());
 
         dishRecordService.createDishRecord(new DishRecordIngredientDTO(dishRecord1, new IngredientIdQuantityDTO[]{
                 new IngredientIdQuantityDTO(1L, 1L), new IngredientIdQuantityDTO(2L, 1L)
