@@ -33,7 +33,7 @@ public class DishRecord {
             CascadeType.MERGE,
             CascadeType.REFRESH
     })
-    @JoinColumn(name = "dish_name", nullable = false)
+    @JoinColumn(name = "dish_name", nullable = true)
     @JsonView(Views.DishRecordView.class)
     private Dish dish;
 
