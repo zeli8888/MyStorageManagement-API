@@ -6,10 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ze.mystoragemanagement.dto.DishIngredientDTO;
 import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
 import ze.mystoragemanagement.exception.IngredientNotFoundException;
-import ze.mystoragemanagement.model.Dish;
-import ze.mystoragemanagement.model.DishIngredient;
-import ze.mystoragemanagement.model.DishIngredientId;
-import ze.mystoragemanagement.model.Ingredient;
+import ze.mystoragemanagement.model.*;
+import ze.mystoragemanagement.repository.DishRecordRepository;
 import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.service.DishService;
@@ -30,6 +28,8 @@ public class DishServiceImpl implements DishService {
     private DishRepository dishRepository;
     @Autowired
     private IngredientRepository ingredientRepository;
+    @Autowired
+    private DishRecordRepository dishRecordRepository;
 
     @Override
     public List<Dish> getAllDishes() {
@@ -105,7 +105,13 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @Transactional
     public void deleteDish(Long dishId) {
+        Dish dish = dishRepository.findById(dishId).orElseThrow(()->new IllegalArgumentException("Dish with id "+dishId+" not found"));
+        for (DishRecord dishRecord : dish.getDishRecords()) {
+            dishRecord.setDish(null);
+            dishRecordRepository.save(dishRecord);
+        }
         dishRepository.deleteById(dishId);
     }
 }

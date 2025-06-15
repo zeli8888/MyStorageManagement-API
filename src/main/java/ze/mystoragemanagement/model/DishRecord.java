@@ -28,7 +28,7 @@ public class DishRecord {
     @JsonView(Views.DishRecordView.class)
     private String dishRecordDesc;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {
+    @ManyToOne(fetch = FetchType.EAGER, optional = true, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.REFRESH
