@@ -31,12 +31,7 @@ public class Dish {
     @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DishIngredient> dishIngredients = new HashSet<>();
 
-    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.DETACH
-    }, orphanRemoval = false)
+    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<DishRecord> dishRecords = new HashSet<>();
 
