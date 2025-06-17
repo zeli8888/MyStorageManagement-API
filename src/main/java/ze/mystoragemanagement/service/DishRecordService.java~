@@ -18,5 +18,4 @@ public interface DishRecordService {
     DishRecord createDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO);
     DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dishRecordIngredientDTO);
     void deleteDishRecord(Long dishRecordId);
-    List<DishRecord> searchDishRecords(String searchString);
 }

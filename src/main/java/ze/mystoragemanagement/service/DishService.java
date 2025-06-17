@@ -21,5 +21,5 @@ public interface DishService {
     Dish createDish(DishIngredientDTO dishIngredientDTO);
     Dish updateDish(Long dishId, DishIngredientDTO dishIngredientDTO);
     void deleteDish(Long dishId);
-
+    List<Dish> searchDishes(String searchString);
 }

@@ -114,9 +114,4 @@ public class DishServiceImpl implements DishService {
         }
         dishRepository.deleteById(dishId);
     }
-
-    @Override
-    public List<Dish> searchDishes(String searchString) {
-        return dishRepository.searchDishes(searchString);
-    }
 }

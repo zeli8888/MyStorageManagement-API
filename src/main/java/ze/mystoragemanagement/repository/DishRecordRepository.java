@@ -1,8 +1,11 @@
 package ze.mystoragemanagement.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ze.mystoragemanagement.model.DishRecord;
+
+import java.util.List;
 
 /**
  * @Author : Ze Li
@@ -13,5 +16,18 @@ import ze.mystoragemanagement.model.DishRecord;
 
 @Repository
 public interface DishRecordRepository extends JpaRepository<DishRecord, Long> {
+    @Query("SELECT dr FROM DishRecord dr " +
+            "JOIN dr.dish d " +
+            "JOIN dr.dishRecordIngredients dri " +
+            "JOIN dri.ingredient i " +
+            "WHERE dr.dishRecordDesc LIKE %?1% " +
+            "OR i.ingredientName LIKE %?1% " +
+            "OR i.ingredientDesc LIKE %?1% " +
+            "OR d.dishName LIKE %?1% " +
+            "OR d.dishDesc LIKE %?1% " +
+            "ORDER BY dr.dishRecordTime DESC"
+    )
+    List<DishRecord> searchDishRecords(String searchString);
 
+    List<DishRecord> findAllByOrderByDishRecordTimeDesc();
 }

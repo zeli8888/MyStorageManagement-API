@@ -31,6 +31,12 @@ public class DishRecordController {
         return ResponseEntity.ok(dishRecordService.getAllDishRecords());
     }
 
+    @GetMapping("/dishrecords/search")
+    @JsonView(Views.DishRecordView.class)
+    public ResponseEntity<List<DishRecord>> searchDishRecords(@RequestParam String searchString) {
+        return ResponseEntity.ok(dishRecordService.searchDishRecords(searchString));
+    }
+
     @GetMapping("/dishrecords/{dishRecordId}")
     @JsonView(Views.DishRecordView.class)
     public ResponseEntity<DishRecord> getDishRecordById(@PathVariable Long dishRecordId) {

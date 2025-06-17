@@ -67,9 +67,4 @@ public class DishController {
     public ResponseEntity<Dish> updateDish(@PathVariable Long dishId, @RequestBody DishIngredientDTO dishIngredientDTO) {
         return ResponseEntity.ok(dishService.updateDish(dishId, dishIngredientDTO));
     }
-
-    @GetMapping("/dishes/search")
-    public ResponseEntity<List<Dish>> searchDishes(@RequestParam String searchString) {
-        return ResponseEntity.ok(dishService.searchDishes(searchString));
-    }
 }

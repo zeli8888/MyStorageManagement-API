@@ -23,4 +23,5 @@ public interface IngredientService {
 
     Ingredient updateIngredient(Long ingredientId, Ingredient ingredient);
 
+    List<Ingredient> searchIngredients(String searchString);
 }

@@ -55,4 +55,9 @@ public class IngredientController {
     public ResponseEntity<Ingredient> updateIngredient(@PathVariable Long ingredientId, @RequestBody Ingredient ingredient){
         return ResponseEntity.ok(ingredientService.updateIngredient(ingredientId, ingredient));
     }
+
+    @GetMapping("/ingredients/search")
+    public ResponseEntity<List<Ingredient>> searchIngredients(@PathVariable String searchString){
+        return ResponseEntity.ok(ingredientService.searchIngredients(searchString));
+    }
 }

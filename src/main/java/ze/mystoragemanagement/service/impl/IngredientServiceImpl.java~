@@ -50,9 +50,4 @@ public class IngredientServiceImpl implements IngredientService {
         ingredient.setIngredientId(ingredientId);
         return ingredientRepository.save(ingredient);
     }
-
-    @Override
-    public List<Ingredient> searchIngredients(String searchString) {
-        return ingredientRepository.searchIngredients(searchString);
-    }
 }

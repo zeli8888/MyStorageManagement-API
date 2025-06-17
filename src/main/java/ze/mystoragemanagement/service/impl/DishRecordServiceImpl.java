@@ -3,7 +3,6 @@ package ze.mystoragemanagement.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ze.mystoragemanagement.dto.DishIngredientDTO;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
 import ze.mystoragemanagement.exception.DishNotFoundException;
@@ -34,7 +33,7 @@ public class DishRecordServiceImpl implements DishRecordService {
 
     @Override
     public List<DishRecord> getAllDishRecords() {
-        return dishRecordRepository.findAll();
+        return dishRecordRepository.findAllByOrderByDishRecordTimeDesc();
     }
 
     @Override
@@ -82,4 +81,10 @@ public class DishRecordServiceImpl implements DishRecordService {
     public void deleteDishRecord(Long dishRecordId) {
         dishRecordRepository.deleteById(dishRecordId);
     }
+
+    @Override
+    public List<DishRecord> searchDishRecords(String searchString){
+        return dishRecordRepository.searchDishRecords(searchString);
+    }
+
 }
