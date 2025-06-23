@@ -1,6 +1,8 @@
 package ze.mystoragemanagement.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
@@ -13,8 +15,8 @@ import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.service.DishRecordService;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * @Author : Ze Li
@@ -32,8 +34,8 @@ public class DishRecordServiceImpl implements DishRecordService {
     private DishRepository dishRepository;
 
     @Override
-    public List<DishRecord> getAllDishRecords() {
-        return dishRecordRepository.findAllByOrderByDishRecordTimeDesc();
+    public Page<DishRecord> getAllDishRecords(Pageable pageable) {
+        return dishRecordRepository.findAll(pageable);
     }
 
     @Override
@@ -78,13 +80,16 @@ public class DishRecordServiceImpl implements DishRecordService {
     }
 
     @Override
-    public void deleteDishRecord(Long dishRecordId) {
-        dishRecordRepository.deleteById(dishRecordId);
+    public void deleteDishRecords(Collection<Long> dishRecordIds) {
+        if (dishRecordIds.isEmpty()) {
+            return;
+        }
+        dishRecordRepository.deleteAllById(dishRecordIds);
     }
 
     @Override
-    public List<DishRecord> searchDishRecords(String searchString){
-        return dishRecordRepository.searchDishRecords(searchString);
+    public Page<DishRecord> searchDishRecords(String searchString, Pageable pageable){
+        return dishRecordRepository.searchDishRecords(searchString, pageable);
     }
 
 }

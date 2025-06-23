@@ -71,6 +71,7 @@ public class DishRecordController {
     }
 
     @DeleteMapping("/dishrecords")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<Void> deleteDishRecords(@RequestBody List<Long> dishRecordIds) {
         dishRecordService.deleteDishRecords(dishRecordIds);
         return ResponseEntity.noContent().build();

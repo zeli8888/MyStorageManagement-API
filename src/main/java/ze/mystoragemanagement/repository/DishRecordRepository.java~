@@ -26,7 +26,8 @@ public interface DishRecordRepository extends JpaRepository<DishRecord, Long> {
             "OR i.ingredientName LIKE %?1% " +
             "OR i.ingredientDesc LIKE %?1% " +
             "OR d.dishName LIKE %?1% " +
-            "OR d.dishDesc LIKE %?1% "
+            "OR d.dishDesc LIKE %?1% " +
+            "ORDER BY dr.dishRecordTime DESC"
     )
     Page<DishRecord> searchDishRecords(String searchString, Pageable pageable);
 }

@@ -1,8 +1,11 @@
 package ze.mystoragemanagement.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.model.DishRecord;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,10 +16,10 @@ import java.util.List;
  */
 
 public interface DishRecordService {
-    List<DishRecord> getAllDishRecords();
+    Page<DishRecord> getAllDishRecords(Pageable pageable);
     DishRecord getDishRecordById(Long dishRecordId);
     DishRecord createDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO);
     DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dishRecordIngredientDTO);
-    void deleteDishRecord(Long dishRecordId);
-    List<DishRecord> searchDishRecords(String searchString);
+    void deleteDishRecords(Collection<Long> dishRecordIds);
+    Page<DishRecord> searchDishRecords(String searchString, Pageable pageable);
 }

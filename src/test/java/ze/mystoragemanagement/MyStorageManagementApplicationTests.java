@@ -12,6 +12,7 @@ import ze.mystoragemanagement.service.DishService;
 import ze.mystoragemanagement.service.IngredientService;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,7 +118,7 @@ class MyStorageManagementApplicationTests {
         assertEquals(1, dishService.getDishByName("test1").getDishIngredients().size());
         assertEquals(1, dishService.getDishByName("test2").getDishIngredients().size());
 
-        dishRecordService.deleteDishRecord(1L);
+        dishRecordService.deleteDishRecords(Collections.singleton(1L));
         assertNull(dishRecordService.getDishRecordById(1L));
         assertNotNull(dishService.getDishById(1L));
 
