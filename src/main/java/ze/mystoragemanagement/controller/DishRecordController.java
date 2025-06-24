@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
+import ze.mystoragemanagement.dto.DishRecordPage;
 import ze.mystoragemanagement.model.DishRecord;
 import ze.mystoragemanagement.model.Views;
 import ze.mystoragemanagement.service.DishRecordService;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,23 +31,23 @@ public class DishRecordController {
 
     @GetMapping("/dishrecords")
     @JsonView(Views.DishRecordView.class)
-    public ResponseEntity<List<DishRecord>> getAllDishRecords(
+    public ResponseEntity<DishRecordPage> getAllDishRecords(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dishRecordTime").descending());
-        return ResponseEntity.ok(dishRecordService.getAllDishRecords(pageable).getContent());
+        return ResponseEntity.ok(new DishRecordPage(dishRecordService.getAllDishRecords(pageable)));
     }
 
     @GetMapping("/dishrecords/search")
     @JsonView(Views.DishRecordView.class)
-    public ResponseEntity<List<DishRecord>> searchDishRecords(
+    public ResponseEntity<DishRecordPage> searchDishRecords(
             @RequestParam String searchString,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dishRecordTime").descending());
-        return ResponseEntity.ok(dishRecordService.searchDishRecords(searchString, pageable).getContent());
+        return ResponseEntity.ok(new DishRecordPage(dishRecordService.searchDishRecords(searchString, pageable)));
     }
 
     @GetMapping("/dishrecords/{dishRecordId}")
@@ -71,6 +71,7 @@ public class DishRecordController {
     }
 
     @DeleteMapping("/dishrecords")
+    @JsonView(Views.DishRecordView.class)
     public ResponseEntity<Void> deleteDishRecords(@RequestBody List<Long> dishRecordIds) {
         dishRecordService.deleteDishRecords(dishRecordIds);
         return ResponseEntity.noContent().build();

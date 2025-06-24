@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface DishRepository extends JpaRepository<Dish, Long> {
     Optional<Dish> findDishByDishName(String dishName);
 
-    @Query("SELECT d FROM Dish d " +
+    @Query("SELECT DISTINCT d FROM Dish d " +
         "JOIN d.dishIngredients di " +
         "JOIN di.ingredient i " +
         "WHERE i.ingredientName LIKE %?1% OR i.ingredientDesc LIKE %?1% OR d.dishName LIKE %?1% OR d.dishDesc LIKE %?1% ")

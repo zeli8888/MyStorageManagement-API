@@ -20,7 +20,7 @@ import java.util.Optional;
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     Optional<Ingredient> findIngredientByIngredientName(String ingredientName);
 
-    @Query("SELECT i FROM Ingredient i " +
+    @Query("SELECT DISTINCT i FROM Ingredient i " +
     "WHERE i.ingredientName LIKE %?1% OR i.ingredientDesc LIKE %?1% ")
     List<Ingredient> searchIngredients(String searchString);
 }

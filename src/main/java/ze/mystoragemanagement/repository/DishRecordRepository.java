@@ -18,7 +18,7 @@ import java.util.List;
 
 @Repository
 public interface DishRecordRepository extends JpaRepository<DishRecord, Long> {
-    @Query("SELECT dr FROM DishRecord dr " +
+    @Query("SELECT DISTINCT dr FROM DishRecord dr " +
             "JOIN dr.dish d " +
             "JOIN dr.dishRecordIngredients dri " +
             "JOIN dri.ingredient i " +
