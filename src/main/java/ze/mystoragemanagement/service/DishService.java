@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ze.mystoragemanagement.dto.DishIngredientDTO;
 import ze.mystoragemanagement.model.Dish;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,6 +21,6 @@ public interface DishService {
 //    Dish updateDish(Long dishId, Dish dish);
     Dish createDish(DishIngredientDTO dishIngredientDTO);
     Dish updateDish(Long dishId, DishIngredientDTO dishIngredientDTO);
-    void deleteDish(Long dishId);
+    void deleteDishes(Collection<Long> dishIds);
     List<Dish> searchDishes(String searchString);
 }

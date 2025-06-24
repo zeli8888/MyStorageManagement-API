@@ -52,9 +52,9 @@ public class DishController {
         return ResponseEntity.created(uri).body(createdDish);
     }
 
-    @DeleteMapping("/dishes/{dishId}")
-    public ResponseEntity<Void> deleteDish(@PathVariable Long dishId) {
-        dishService.deleteDish(dishId);
+    @DeleteMapping("/dishes")
+    public ResponseEntity<Void> deleteDishes(@RequestBody List<Long> dishIds) {
+        dishService.deleteDishes(dishIds);
         return ResponseEntity.noContent().build();
     }
 

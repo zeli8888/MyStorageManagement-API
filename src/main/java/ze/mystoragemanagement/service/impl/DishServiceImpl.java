@@ -12,6 +12,7 @@ import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.service.DishService;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -106,13 +107,15 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
-    public void deleteDish(Long dishId) {
-        Dish dish = dishRepository.findById(dishId).orElseThrow(()->new IllegalArgumentException("Dish with id "+dishId+" not found"));
-        for (DishRecord dishRecord : dish.getDishRecords()) {
-            dishRecord.setDish(null);
-            dishRecordRepository.save(dishRecord);
+    public void deleteDishes(Collection<Long> dishIds) {
+        for (Long dishId : dishIds) {
+            Dish dish = dishRepository.findById(dishId).orElseThrow(()->new IllegalArgumentException("Dish with id "+dishId+" not found"));
+            for (DishRecord dishRecord : dish.getDishRecords()) {
+                dishRecord.setDish(null);
+                dishRecordRepository.save(dishRecord);
+            }
+            dishRepository.deleteById(dishId);
         }
-        dishRepository.deleteById(dishId);
     }
 
     @Override
