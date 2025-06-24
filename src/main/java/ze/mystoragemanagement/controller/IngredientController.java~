@@ -47,7 +47,7 @@ public class IngredientController {
 
     @DeleteMapping("/ingredients/{ingredientId}")
     public ResponseEntity<Void> deleteIngredient(@PathVariable Long ingredientId){
-        ingredientService.deleteIngredient(ingredientId);
+        ingredientService.deleteIngredients(ingredientId);
         return ResponseEntity.noContent().build();
     }
 
@@ -57,7 +57,7 @@ public class IngredientController {
     }
 
     @GetMapping("/ingredients/search")
-    public ResponseEntity<List<Ingredient>> searchIngredients(@PathVariable String searchString){
+    public ResponseEntity<List<Ingredient>> searchIngredients(@RequestParam String searchString) {
         return ResponseEntity.ok(ingredientService.searchIngredients(searchString));
     }
 }

@@ -2,6 +2,7 @@ package ze.mystoragemanagement.service;
 
 import ze.mystoragemanagement.model.Ingredient;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface IngredientService {
 
     Ingredient getIngredientByName(String ingredientName);
 
-    void deleteIngredient(Long id);
+    void deleteIngredients(Collection<Long> ids);
 
     Ingredient createIngredient(Ingredient ingredient);
 

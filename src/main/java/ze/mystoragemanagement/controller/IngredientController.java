@@ -45,9 +45,9 @@ public class IngredientController {
         return ResponseEntity.created(uri).body(createdIngredient);
     }
 
-    @DeleteMapping("/ingredients/{ingredientId}")
-    public ResponseEntity<Void> deleteIngredient(@PathVariable Long ingredientId){
-        ingredientService.deleteIngredient(ingredientId);
+    @DeleteMapping("/ingredients")
+    public ResponseEntity<Void> deleteIngredients(@RequestBody List<Long> ingredientIds){
+        ingredientService.deleteIngredients(ingredientIds);
         return ResponseEntity.noContent().build();
     }
 

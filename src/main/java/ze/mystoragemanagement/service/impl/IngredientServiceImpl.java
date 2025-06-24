@@ -6,6 +6,7 @@ import ze.mystoragemanagement.model.Ingredient;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.service.IngredientService;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,8 +37,8 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteIngredient(Long id) {
-        ingredientRepository.deleteById(id);
+    public void deleteIngredients(Collection<Long> ids) {
+        ingredientRepository.deleteAllById(ids);
     }
 
     @Override

@@ -109,7 +109,7 @@ class MyStorageManagementApplicationTests {
 
         assertEquals(2, dishRecordService.getDishRecordById(1L).getDishRecordIngredients().size());
         assertEquals(2, dishRecordService.getDishRecordById(2L).getDishRecordIngredients().size());
-        ingredientService.deleteIngredient(1L);
+        ingredientService.deleteIngredients(Collections.singleton(1L));
 
         assertNull(ingredientService.getIngredientById(1L));
         assertEquals(1, dishRecordService.getDishRecordById(1L).getDishRecordIngredients().size());
@@ -191,7 +191,7 @@ class MyStorageManagementApplicationTests {
         ingredientService.updateIngredient(ingredient1.getIngredientId(), ingredientNew1);
         assertEquals(2, dishService.getDishByName("test2").getDishIngredients().size());
         assertEquals(2, dishService.getDishByName("test1").getDishIngredients().size());
-        ingredientService.deleteIngredient(ingredient2.getIngredientId());
+        ingredientService.deleteIngredients(Collections.singleton(ingredient2.getIngredientId()));
         assertEquals(1, dishService.getDishByName("test1").getDishIngredients().size());
         assertEquals(100L, dishService.getDishByName("test1").getDishIngredients().iterator().next().getDishIngredientQuantity());
     }
