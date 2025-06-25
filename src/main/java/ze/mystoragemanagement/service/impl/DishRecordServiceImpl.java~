@@ -53,8 +53,9 @@ public class DishRecordServiceImpl implements DishRecordService {
     private DishRecord saveDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO){
         DishRecord dishRecord = dishRecordIngredientDTO.getDishRecord();
         Long dishRecordId = dishRecord.getDishRecordId();
+        DishRecord oldDishRecord;
         if (dishRecordId != null) {
-            DishRecord oldDishRecord = dishRecordRepository.findById(dishRecordId).orElseThrow(()->new DishNotFoundException("id "+dishRecordId));
+            oldDishRecord = dishRecordRepository.findById(dishRecordId).orElseThrow(()->new DishNotFoundException("id "+dishRecordId));
             for (DishRecordIngredient dishIngredient : oldDishRecord.getDishRecordIngredients()){
                 Ingredient ingredient = dishIngredient.getIngredient();
                 ingredient.setIngredientStorage(ingredient.getIngredientStorage() + dishIngredient.getDishRecordIngredientQuantity());
