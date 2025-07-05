@@ -1,0 +1,40 @@
+package ze.mystoragemanagement.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import ze.mystoragemanagement.model.User;
+import ze.mystoragemanagement.repository.UserRepository;
+import ze.mystoragemanagement.service.UserService;
+
+/**
+ * @Author : Ze Li
+ * @Date : 05/07/2025 16:57
+ * @Version : V1.0
+ * @Description :
+ */
+@Service
+public class UserServiceImpl implements UserService, UserDetailsService {
+    @Autowired
+    private UserRepository userRepository;
+    @Value("${upload.path}")
+    private String uploadPath;
+    @Value("${user.picture.size}")
+    private int userPictureSize;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User Not Found with username: " + username);
+        }
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                Collections.emptyList()
+        );
+    }
+}
