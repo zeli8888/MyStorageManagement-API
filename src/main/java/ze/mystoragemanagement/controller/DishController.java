@@ -38,12 +38,6 @@ public class DishController {
         return ResponseEntity.ok(dishService.getDishByName(dishName));
     }
 
-//    @PostMapping("/dishes")
-//    public ResponseEntity<Dish> createDish(@RequestBody Dish dish) {
-//        Dish createdDish = dishService.createDish(dish);
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{dishId}").buildAndExpand(createdDish.getDishId()).toUri();
-//        return ResponseEntity.created(uri).body(createdDish);
-//    }
 
     @PostMapping("/dishes")
     public ResponseEntity<Dish> createDish(@RequestBody DishIngredientDTO dishIngredientDTO) {
@@ -58,10 +52,6 @@ public class DishController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PutMapping("/dishes/{dishId}")
-//    public ResponseEntity<Dish> updateDish(@PathVariable Long dishId, @RequestBody Dish dish) {
-//        return ResponseEntity.ok(dishService.updateDish(dishId, dish));
-//    }
 
     @PutMapping("/dishes/{dishId}")
     public ResponseEntity<Dish> updateDish(@PathVariable Long dishId, @RequestBody DishIngredientDTO dishIngredientDTO) {

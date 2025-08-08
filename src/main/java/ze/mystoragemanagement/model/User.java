@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-
 /**
  * @Author : Ze Li
  * @Date : 17/06/2025 17:05
@@ -33,15 +31,21 @@ public class User {
     @JsonIgnore
     private String googleId;
 
-    @Column(name="user_passwd", nullable = true)
+    @Column(name="password", nullable = true)
     private String password;
 
     @Column(name="user_email", unique = true, nullable = true)
     private String email;
 
-    @Column(name="user_name", unique = true, nullable = true)
-    private String userName;
+    @Column(name="username", unique = true, nullable = true)
+    private String username;
 
     @Column(name="user_picture", nullable = true)
     private String userPicture;
+
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
 }

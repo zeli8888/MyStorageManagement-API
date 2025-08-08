@@ -47,10 +47,6 @@ public class DishServiceImpl implements DishService {
         return dishRepository.findDishByDishName(dishName).orElse(null);
     }
 
-//    @Override
-//    public Dish createDish(Dish dish) {
-//        return saveDish(dish);
-//    }
 
     @Transactional
     @Override
@@ -58,11 +54,6 @@ public class DishServiceImpl implements DishService {
         return saveDish(dishIngredientDTO);
     }
 
-//    @Override
-//    public Dish updateDish(Long dishId, Dish dish) {
-//        dish.setDishId(dishId);
-//        return saveDish(dish);
-//    }
 
     @Transactional
     @Override
@@ -71,18 +62,6 @@ public class DishServiceImpl implements DishService {
         return saveDish(dishIngredientDTO);
     }
 
-//    private Dish saveDish(Dish dish){
-//        Set<Ingredient> ingredients = dish.getDishIngredients();
-//        if (ingredients != null) {
-//            HashSet<Ingredient> ingredientsStored = new HashSet<>();
-//            for (Ingredient ingredient : ingredients) {
-//                Ingredient ingredientStored = ingredientRepository.findById(ingredient.getIngredientId()).orElseThrow(()->new IngredientNotFoundException(ingredient.getIngredientName()));
-//                ingredientsStored.add(ingredientStored);
-//            }
-//            dish.setDishIngredients(ingredientsStored);
-//        }
-//        return dishRepository.save(dish);
-//    }
 
     private Dish saveDish(DishIngredientDTO dishIngredientDTO){
         Dish dish = dishIngredientDTO.getDish();
