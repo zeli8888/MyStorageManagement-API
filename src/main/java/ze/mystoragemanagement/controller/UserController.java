@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ze.mystoragemanagement.model.User;
-import ze.mystoragemanagement.security.JwtCookieUtil;
 import ze.mystoragemanagement.security.JwtUtil;
 import ze.mystoragemanagement.service.UserService;
 
@@ -33,8 +32,6 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
-    JwtCookieUtil jwtCookieUtil;
-    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/auth/login")
@@ -46,7 +43,7 @@ public class UserController {
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        jwtCookieUtil.refreshJwtToken(request, response, jwtUtil.generateToken(userDetails.getUsername()));
+        response.setHeader("Authorization", "Bearer " + jwtUtil.generateToken(userDetails.getUsername()));
 
         return ResponseEntity.ok(userService.getUser());
     }

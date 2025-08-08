@@ -2,7 +2,6 @@ package ze.mystoragemanagement.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ze.mystoragemanagement.service.impl.UserServiceImpl;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * @Author : Ze Li
@@ -32,11 +30,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtils;
     @Autowired
-    private JwtCookieUtil jwtCookieUtil;
-    @Autowired
     private UserServiceImpl userService;
-    @Value("${jwt.token.name}")
-    private String JWT_COOKIE_NAME;
     @Value("${public.urls}")
     private String[] publicURLs;
     @Override
@@ -51,10 +45,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String token = parseJwt(request);
             if (token != null) {
-                String validatedJwtToken = jwtUtils.validateJwtToken(token);
-                if (!validatedJwtToken.equals(token)) {
-                    jwtCookieUtil.refreshJwtToken(request, response, validatedJwtToken);
-                }
+                token = jwtUtils.validateJwtToken(token);
+                response.setHeader("Authorization", "Bearer " + token);
                 String username = jwtUtils.getUsernameFromToken(token);
                 UserDetails userDetails = userService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication =
@@ -72,13 +64,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
     private String parseJwt(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (JWT_COOKIE_NAME.equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
+        String headerAuth = request.getHeader("Authorization");
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
         }
         return null;
     }
