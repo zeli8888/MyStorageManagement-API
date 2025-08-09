@@ -31,5 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-
+### temporary files ###
 *~
+### keys ###
+firebase-private-key.json

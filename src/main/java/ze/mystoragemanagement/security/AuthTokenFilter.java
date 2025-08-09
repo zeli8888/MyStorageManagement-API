@@ -1,5 +1,7 @@
 package ze.mystoragemanagement.security;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,15 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
-import ze.mystoragemanagement.service.impl.UserServiceImpl;
 
 import java.io.IOException;
 
@@ -28,9 +26,7 @@ import java.io.IOException;
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
-    private JwtUtil jwtUtils;
-    @Autowired
-    private UserServiceImpl userService;
+    private FirebaseAuth firebaseAuth;
     @Value("${public.urls}")
     private String[] publicURLs;
     @Override
@@ -45,21 +41,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String token = parseJwt(request);
             if (token != null) {
-                token = jwtUtils.validateJwtToken(token);
-                response.setHeader("Authorization", "Bearer " + token);
-                String username = jwtUtils.getUsernameFromToken(token);
-                UserDetails userDetails = userService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(token, true);
+                Authentication authentication = new FirebaseAuthenticationToken(
+                        firebaseToken.getUid(),
+                        firebaseToken.getClaims()
+                );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cannot set user authentication: " + e.getMessage());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(),"Error: Unauthorized");
+            return;
         }
         filterChain.doFilter(request, response);
     }

@@ -6,7 +6,6 @@ import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.model.DishRecord;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @Author : Ze Li
