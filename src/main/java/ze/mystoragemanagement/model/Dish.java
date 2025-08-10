@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,14 +19,27 @@ import java.util.Set;
  * @Description :
  */
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(
+        name = "dish",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_dish_per_user",
+                        columnNames = {"firebaseId", "dishName"}
+                )
+        }
+)
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.DishRecordView.class)
     private Long dishId;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @JsonView(Views.DishRecordView.class)
     private String dishName;
 
@@ -35,61 +52,7 @@ public class Dish {
     @JsonIgnore
     private Set<DishRecord> dishRecords = new HashSet<>();
 
-    public String getDishName() {
-        return dishName;
-    }
-
-    public void setDishName(String dishName) {
-        this.dishName = dishName;
-    }
-
-    public Dish(Long dishId, String dishName, String dishDesc, Set<DishIngredient> dishIngredients) {
-        this.dishId = dishId;
-        this.dishName = dishName;
-        this.dishDesc = dishDesc;
-        this.dishIngredients = dishIngredients;
-    }
-
-    public Dish(Long dishId, String dishName, String dishDesc, Set<DishIngredient> dishIngredients, Set<DishRecord> dishRecords) {
-        this.dishId = dishId;
-        this.dishName = dishName;
-        this.dishDesc = dishDesc;
-        this.dishIngredients = dishIngredients;
-        this.dishRecords = dishRecords;
-    }
-
-    public Dish() {
-    }
-
-    public Set<DishRecord> getDishRecords() {
-        return dishRecords;
-    }
-
-    public void setDishRecords(Set<DishRecord> dishRecords) {
-        this.dishRecords = dishRecords;
-    }
-
-    public Long getDishId() {
-        return dishId;
-    }
-
-    public void setDishId(Long dishId) {
-        this.dishId = dishId;
-    }
-
-    public String getDishDesc() {
-        return dishDesc;
-    }
-
-    public void setDishDesc(String dishDesc) {
-        this.dishDesc = dishDesc;
-    }
-
-    public Set<DishIngredient> getDishIngredients() {
-        return dishIngredients;
-    }
-
-    public void setDishIngredients(Set<DishIngredient> ingredients) {
-        this.dishIngredients = ingredients;
-    }
+    @Column(nullable = false)
+    @JsonIgnore
+    private String firebaseId;
 }

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,14 +19,27 @@ import java.util.Set;
  * @Description :
  */
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(
+        name = "ingredient",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_ingredient_per_user",
+                        columnNames = {"firebaseId", "ingredientName"}
+                )
+        }
+)
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.DishRecordView.class)
     private Long ingredientId;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     @JsonView(Views.DishRecordView.class)
     private String ingredientName;
 
@@ -43,81 +60,7 @@ public class Ingredient {
     @JsonIgnore
     private Set<DishRecordIngredient> dishRecordIngredients = new HashSet<>();
 
-    public Ingredient(Long ingredientId, String ingredientName, Long ingredientStorage, Long ingredientCost, String ingredientDesc, Set<DishIngredient> dishIngredients, Set<DishRecordIngredient> dishRecordIngredients) {
-        this.ingredientId = ingredientId;
-        this.ingredientName = ingredientName;
-        this.ingredientStorage = ingredientStorage;
-        this.ingredientCost = ingredientCost;
-        this.ingredientDesc = ingredientDesc;
-        this.dishIngredients = dishIngredients;
-        this.dishRecordIngredients = dishRecordIngredients;
-    }
-
-    public Ingredient(Long ingredientId, String ingredientName, Long ingredientCost, Long ingredientStorage, String ingredientDesc) {
-        this.ingredientDesc = ingredientDesc;
-        this.ingredientCost = ingredientCost;
-        this.ingredientStorage = ingredientStorage;
-        this.ingredientName = ingredientName;
-        this.ingredientId = ingredientId;
-    }
-
-    public Set<DishIngredient> getDishIngredients() {
-        return dishIngredients;
-    }
-
-    public void setDishIngredients(Set<DishIngredient> dishIngredients) {
-        this.dishIngredients = dishIngredients;
-    }
-
-    public Set<DishRecordIngredient> getDishRecordIngredients() {
-        return dishRecordIngredients;
-    }
-
-    public void setDishRecordIngredients(Set<DishRecordIngredient> dishRecordIngredients) {
-        this.dishRecordIngredients = dishRecordIngredients;
-    }
-
-    public Long getIngredientId() {
-        return ingredientId;
-    }
-
-    public void setIngredientId(Long ingredientId) {
-        this.ingredientId = ingredientId;
-    }
-
-    public String getIngredientName() {
-        return ingredientName;
-    }
-
-    public void setIngredientName(String ingredientName) {
-        this.ingredientName = ingredientName;
-    }
-
-    public Long getIngredientStorage() {
-        return ingredientStorage;
-    }
-
-    public void setIngredientStorage(Long ingredientStorage) {
-        this.ingredientStorage = ingredientStorage;
-    }
-
-    public Long getIngredientCost() {
-        return ingredientCost;
-    }
-
-    public void setIngredientCost(Long ingredientCost) {
-        this.ingredientCost = ingredientCost;
-    }
-
-    public String getIngredientDesc() {
-        return ingredientDesc;
-    }
-
-    public void setIngredientDesc(String ingredientDesc) {
-        this.ingredientDesc = ingredientDesc;
-    }
-
-    public Ingredient() {
-    }
-
+    @Column(nullable = false)
+    @JsonIgnore
+    private String firebaseId;
 }

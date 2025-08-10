@@ -1,6 +1,11 @@
 package ze.mystoragemanagement.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -10,33 +15,14 @@ import java.io.Serializable;
  * @Version : V1.0
  * @Description :
  */
+@Embeddable
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DishRecordIngredientId implements Serializable {
     @Column(name = "dish_record_id")
     private Long dishRecordId;
     @Column(name = "ingredient_id")
     private Long ingredientId;
-
-    public Long getDishRecordId() {
-        return dishRecordId;
-    }
-
-    public void setDishRecordId(Long dishRecordId) {
-        this.dishRecordId = dishRecordId;
-    }
-
-    public Long getIngredientId() {
-        return ingredientId;
-    }
-
-    public void setIngredientId(Long ingredientId) {
-        this.ingredientId = ingredientId;
-    }
-
-    public DishRecordIngredientId() {
-    }
-
-    public DishRecordIngredientId(Long ingredientId, Long dishRecordId) {
-        this.ingredientId = ingredientId;
-        this.dishRecordId = dishRecordId;
-    }
 }

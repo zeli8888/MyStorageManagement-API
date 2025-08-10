@@ -2,6 +2,10 @@ package ze.mystoragemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @Author : Ze Li
@@ -11,6 +15,10 @@ import jakarta.persistence.*;
  */
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "dish_ingredient")
 public class DishIngredient {
     @EmbeddedId
@@ -28,46 +36,4 @@ public class DishIngredient {
     @MapsId("ingredientId")
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
-
-    public DishIngredientId getDishIngredientId() {
-        return dishIngredientId;
-    }
-
-    public void setDishIngredientId(DishIngredientId dishIngredientId) {
-        this.dishIngredientId = dishIngredientId;
-    }
-
-    public Long getDishIngredientQuantity() {
-        return dishIngredientQuantity;
-    }
-
-    public void setDishIngredientQuantity(Long dishIngredientQuantity) {
-        this.dishIngredientQuantity = dishIngredientQuantity;
-    }
-
-    public Dish getDish() {
-        return dish;
-    }
-
-    public void setDish(Dish dish) {
-        this.dish = dish;
-    }
-
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
-    }
-
-    public DishIngredient(DishIngredientId dishIngredientId, Long dishIngredientQuantity, Dish dish, Ingredient ingredient) {
-        this.dishIngredientId = dishIngredientId;
-        this.dishIngredientQuantity = dishIngredientQuantity;
-        this.dish = dish;
-        this.ingredient = ingredient;
-    }
-
-    public DishIngredient() {
-    }
 }

@@ -2,6 +2,10 @@ package ze.mystoragemanagement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -12,33 +16,13 @@ import java.io.Serializable;
  * @Description :
  */
 @Embeddable
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DishIngredientId implements Serializable {
     @Column(name = "dish_id")
     private Long dishId;
     @Column(name = "ingredient_id")
     private Long ingredientId;
-
-    public Long getDishId() {
-        return dishId;
-    }
-
-    public void setDishId(Long dishId) {
-        this.dishId = dishId;
-    }
-
-    public Long getIngredientId() {
-        return ingredientId;
-    }
-
-    public void setIngredientId(Long ingredientId) {
-        this.ingredientId = ingredientId;
-    }
-
-    public DishIngredientId() {
-    }
-
-    public DishIngredientId(Long dishId, Long ingredientId) {
-        this.dishId = dishId;
-        this.ingredientId = ingredientId;
-    }
 }

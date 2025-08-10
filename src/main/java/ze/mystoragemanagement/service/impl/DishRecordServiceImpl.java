@@ -3,16 +3,17 @@ package ze.mystoragemanagement.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
-import ze.mystoragemanagement.exception.DishNotFoundException;
-import ze.mystoragemanagement.exception.IngredientNotFoundException;
 import ze.mystoragemanagement.model.*;
 import ze.mystoragemanagement.repository.DishRecordRepository;
 import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
+import ze.mystoragemanagement.security.FirebaseSecurityContextId;
 import ze.mystoragemanagement.service.DishRecordService;
 
 import java.util.Collection;
@@ -32,15 +33,22 @@ public class DishRecordServiceImpl implements DishRecordService {
     private DishRecordRepository dishRecordRepository;
     @Autowired
     private DishRepository dishRepository;
+    @Autowired
+    private FirebaseSecurityContextId firebaseSecurityContextId;
+
+    private String getCurrentUserFirebaseId() {
+        return firebaseSecurityContextId.getCurrentFirebaseId();
+    }
 
     @Override
     public Page<DishRecord> getAllDishRecords(Pageable pageable) {
-        return dishRecordRepository.findAll(pageable);
+        return dishRecordRepository.findAllByFirebaseId(getCurrentUserFirebaseId(), pageable);
     }
 
     @Override
     public DishRecord getDishRecordById(Long dishRecordId) {
-        return dishRecordRepository.findById(dishRecordId).orElse(null);
+        return dishRecordRepository.findByDishRecordIdAndFirebaseId(dishRecordId, getCurrentUserFirebaseId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DishRecord with id " + dishRecordId + " not found"));
     }
 
     @Transactional
@@ -50,57 +58,82 @@ public class DishRecordServiceImpl implements DishRecordService {
         return saveDishRecord(dishRecordIngredientDTO);
     }
 
-    private DishRecord saveDishRecord(DishRecordIngredientDTO dishRecordIngredientDTO){
-        DishRecord dishRecord = dishRecordIngredientDTO.getDishRecord();
-        Long dishRecordId = dishRecord.getDishRecordId();
-        if (dishRecordId != null) {
-            DishRecord oldDishRecord = dishRecordRepository.findById(dishRecordId).orElseThrow(()->new DishNotFoundException("id "+dishRecordId));
-            for (DishRecordIngredient dishIngredient : oldDishRecord.getDishRecordIngredients()){
-                Ingredient ingredient = dishIngredient.getIngredient();
-                ingredient.setIngredientStorage(ingredient.getIngredientStorage() + dishIngredient.getDishRecordIngredientQuantity());
-            }
-        }
-
-        Dish dish = dishRecord.getDish();
-        if (dish != null) dishRecord.setDish(dishRepository.findDishByDishName(dish.getDishName()).orElseThrow(()->new DishNotFoundException("name "+dish.getDishName())));
-        dishRecord.setDishRecordIngredients(new HashSet<>());
-        IngredientIdQuantityDTO[] ingredientIdQuantityList = dishRecordIngredientDTO.getIngredientIdQuantityList();
-        if (ingredientIdQuantityList != null) {
-            for (IngredientIdQuantityDTO ingredientIdQuantity : ingredientIdQuantityList){
-                Long ingredientId = ingredientIdQuantity.getIngredientId();
-                Ingredient ingredient;
-                if (ingredientId != null) {
-                    ingredient = ingredientRepository.findById(ingredientId).orElseThrow(()->new IngredientNotFoundException("id "+ingredientId));
-                }else{
-                    ingredient = ingredientRepository.findIngredientByIngredientName(ingredientIdQuantity.getIngredientName()).orElseThrow(()->new IngredientNotFoundException("name "+ingredientIdQuantity.getIngredientName()));
-                }
-                long quantity = ingredientIdQuantity.getQuantity();
-                ingredient.setIngredientStorage(ingredient.getIngredientStorage() - quantity);
-                DishRecordIngredient dishRecordIngredient = new DishRecordIngredient(new DishRecordIngredientId(ingredient.getIngredientId(), dishRecord.getDishRecordId()), quantity, dishRecord, ingredient);
-                dishRecord.getDishRecordIngredients().add(dishRecordIngredient);
-            }
-        }
-        return dishRecordRepository.save(dishRecord);
-    }
-
     @Transactional
     @Override
-    public DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dishRecordIngredientDTO) {
-        dishRecordIngredientDTO.getDishRecord().setDishRecordId(dishRecordId);
-        return saveDishRecord(dishRecordIngredientDTO);
+    public DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dto) {
+        dishRecordRepository.findByDishRecordIdAndFirebaseId(dishRecordId, getCurrentUserFirebaseId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DishRecord with id " + dishRecordId + " not found"));
+
+        dto.getDishRecord().setDishRecordId(dishRecordId);
+        return saveDishRecord(dto);
+    }
+
+    private DishRecord saveDishRecord(DishRecordIngredientDTO dto) {
+        String firebaseId = getCurrentUserFirebaseId();
+        DishRecord record = dto.getDishRecord();
+        record.setFirebaseId(firebaseId);
+        Long recordId = record.getDishRecordId();
+
+        // update record, revert stock
+        if (recordId != null) {
+            DishRecord oldRecord = dishRecordRepository.findByDishRecordIdAndFirebaseId(recordId, firebaseId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DishRecord with id " + recordId + " not found"));
+            revertIngredientStock(oldRecord);
+        }
+
+        // verify dish exists, set dish from database
+        if (record.getDish() != null) {
+            Dish dish = dishRepository.findByDishNameAndFirebaseId(record.getDish().getDishName(), firebaseId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with name " + record.getDish().getDishName() + " not found"));
+            record.setDish(dish);
+        }
+
+        processIngredients(dto, record, firebaseId);
+        return dishRecordRepository.save(record);
+    }
+
+    private void revertIngredientStock(DishRecord oldRecord) {
+        for (DishRecordIngredient ri : oldRecord.getDishRecordIngredients()) {
+            Ingredient ingredient = ri.getIngredient();
+            ingredient.setIngredientStorage(ingredient.getIngredientStorage() + ri.getDishRecordIngredientQuantity());
+            ingredientRepository.save(ingredient);
+        }
+    }
+
+    private void processIngredients(DishRecordIngredientDTO dto, DishRecord record, String firebaseId) {
+        record.setDishRecordIngredients(new HashSet<>());
+
+        for (IngredientIdQuantityDTO item : dto.getIngredientIdQuantityList()) {
+            Ingredient ingredient = item.getIngredientId() != null ?
+                    ingredientRepository.findByIngredientIdAndFirebaseId(item.getIngredientId(), firebaseId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with id " + item.getIngredientId() + " not found")) :
+                    ingredientRepository.findByIngredientNameAndFirebaseId(item.getIngredientName(), firebaseId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with name " + item.getIngredientName() + " not found"));
+
+            // update storage
+            ingredient.setIngredientStorage(ingredient.getIngredientStorage() - item.getQuantity());
+            ingredientRepository.save(ingredient);
+
+            // add link to record
+            DishRecordIngredient ri = new DishRecordIngredient(
+                    new DishRecordIngredientId(ingredient.getIngredientId(), record.getDishRecordId()),
+                    item.getQuantity(),
+                    record,
+                    ingredient
+            );
+            record.getDishRecordIngredients().add(ri);
+        }
     }
 
     @Override
     public void deleteDishRecords(Collection<Long> dishRecordIds) {
-        if (dishRecordIds.isEmpty()) {
-            return;
+        if (!dishRecordIds.isEmpty()) {
+            dishRecordRepository.deleteAllByIdInAndFirebaseId(dishRecordIds, getCurrentUserFirebaseId());
         }
-        dishRecordRepository.deleteAllById(dishRecordIds);
     }
 
     @Override
-    public Page<DishRecord> searchDishRecords(String searchString, Pageable pageable){
-        return dishRecordRepository.searchDishRecords(searchString, pageable);
+    public Page<DishRecord> searchDishRecords(String searchString, Pageable pageable) {
+        return dishRecordRepository.searchDishRecordsByFirebaseId(searchString, getCurrentUserFirebaseId(), pageable);
     }
-
 }

@@ -1,4 +1,5 @@
 package ze.mystoragemanagement.security;
+import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class FirebaseAuthenticationToken extends AbstractAuthenticationToken {
     private final String uid;
+    @Getter
     private final Map<String, Object> claims;
 
     public FirebaseAuthenticationToken(String uid, Map<String, Object> claims) {
@@ -45,5 +47,4 @@ public class FirebaseAuthenticationToken extends AbstractAuthenticationToken {
     @Override
     public Object getPrincipal() { return uid; }
 
-    public Map<String, Object> getClaims() { return claims; }
 }

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @Author : Ze Li
@@ -13,6 +17,10 @@ import jakarta.persistence.*;
  */
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "dish_record_ingredient")
 public class DishRecordIngredient {
     @EmbeddedId
@@ -32,48 +40,4 @@ public class DishRecordIngredient {
     @JoinColumn(name = "ingredient_id")
     @JsonView(Views.DishRecordView.class)
     private Ingredient ingredient;
-
-
-    public DishRecordIngredient() {
-    }
-
-    public DishRecordIngredient(DishRecordIngredientId dishRecordIngredientId, Long dishRecordIngredientQuantity, DishRecord dishRecord, Ingredient ingredient) {
-        this.dishRecordIngredientId = dishRecordIngredientId;
-        this.dishRecordIngredientQuantity = dishRecordIngredientQuantity;
-        this.dishRecord = dishRecord;
-        this.ingredient = ingredient;
-    }
-
-    public DishRecordIngredientId getDishRecordIngredientId() {
-        return dishRecordIngredientId;
-    }
-
-    public void setDishRecordIngredientId(DishRecordIngredientId dishRecordIngredientId) {
-        this.dishRecordIngredientId = dishRecordIngredientId;
-    }
-
-    public Long getDishRecordIngredientQuantity() {
-        return dishRecordIngredientQuantity;
-    }
-
-    public void setDishRecordIngredientQuantity(Long dishRecordIngredientQuantity) {
-        this.dishRecordIngredientQuantity = dishRecordIngredientQuantity;
-    }
-
-    public DishRecord getDishRecord() {
-        return dishRecord;
-    }
-
-    public void setDishRecord(DishRecord dishRecord) {
-        this.dishRecord = dishRecord;
-    }
-
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
-    }
-
 }

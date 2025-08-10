@@ -1,10 +1,13 @@
 package ze.mystoragemanagement.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ze.mystoragemanagement.model.Dish;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +20,19 @@ import java.util.Optional;
 
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Long> {
-    Optional<Dish> findDishByDishName(String dishName);
+    List<Dish> findAllByFirebaseId(String firebaseId);
+    Optional<Dish> findByDishIdAndFirebaseId(Long dishId, String firebaseId);
+    Optional<Dish> findByDishNameAndFirebaseId(String dishName, String firebaseId);
 
     @Query("SELECT DISTINCT d FROM Dish d " +
-        "JOIN d.dishIngredients di " +
-        "JOIN di.ingredient i " +
-        "WHERE i.ingredientName LIKE %?1% OR i.ingredientDesc LIKE %?1% OR d.dishName LIKE %?1% OR d.dishDesc LIKE %?1% ")
-    List<Dish> searchDishes(String searchString);
+            "LEFT JOIN d.dishIngredients di " +
+            "LEFT JOIN di.ingredient i " +
+            "WHERE d.firebaseId = :firebaseId " +
+            "AND (LOWER(d.dishName) LIKE LOWER(CONCAT('%', :searchString, '%')) " +
+            "     OR LOWER(d.dishDesc) LIKE LOWER(CONCAT('%', :searchString, '%')) " +
+            "     OR LOWER(i.ingredientName) LIKE LOWER(CONCAT('%', :searchString, '%')) " +
+            "     OR LOWER(i.ingredientDesc) LIKE LOWER(CONCAT('%', :searchString, '%')))")
+    List<Dish> searchDishesByFirebaseId(@Param("searchString") String searchString,
+                                        @Param("firebaseId") String firebaseId);
+
 }
