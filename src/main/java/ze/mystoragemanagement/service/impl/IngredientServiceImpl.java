@@ -3,6 +3,7 @@ package ze.mystoragemanagement.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ze.mystoragemanagement.model.Ingredient;
 import ze.mystoragemanagement.repository.IngredientRepository;
@@ -48,6 +49,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    @Transactional
     public void deleteIngredients(Collection<Long> ids) {
         String firebaseId = getCurrentUserFirebaseId();
         ingredientRepository.deleteAllByIdInAndFirebaseId(ids, firebaseId);

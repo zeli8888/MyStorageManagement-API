@@ -126,6 +126,7 @@ public class DishRecordServiceImpl implements DishRecordService {
     }
 
     @Override
+    @Transactional
     public void deleteDishRecords(Collection<Long> dishRecordIds) {
         if (!dishRecordIds.isEmpty()) {
             dishRecordRepository.deleteAllByIdInAndFirebaseId(dishRecordIds, getCurrentUserFirebaseId());
