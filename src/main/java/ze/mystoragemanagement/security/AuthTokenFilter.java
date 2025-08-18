@@ -56,9 +56,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
-        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
+        if (headerAuth == null) return null;
+        if (headerAuth.startsWith("Bearer ")) return headerAuth.substring(7);
         return null;
     }
     private boolean isPublicPath(HttpServletRequest request) {

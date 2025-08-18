@@ -30,7 +30,12 @@ public class FirebaseAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     private static Collection<? extends GrantedAuthority> extractAuthorities(Map<String, Object> claims) {
-        List<String> roles = (List<String>) claims.getOrDefault("roles", Collections.emptyList());
+        List<String> roles;
+        try {
+            roles = (List<String>) claims.getOrDefault("roles", Collections.emptyList());
+        } catch (ClassCastException | NullPointerException e) {
+            roles = Collections.emptyList();
+        }
 
         if (roles.isEmpty()) {
             roles = Collections.singletonList("user");
