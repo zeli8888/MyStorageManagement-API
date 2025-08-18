@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @Author : Ze Li
@@ -25,4 +26,18 @@ public class DishIngredientId implements Serializable {
     private Long dishId;
     @Column(name = "ingredient_id")
     private Long ingredientId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DishIngredientId that = (DishIngredientId) o;
+        return Objects.equals(dishId, that.dishId) &&
+                Objects.equals(ingredientId, that.ingredientId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dishId, ingredientId);
+    }
 }

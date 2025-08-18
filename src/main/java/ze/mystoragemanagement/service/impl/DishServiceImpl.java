@@ -80,20 +80,22 @@ public class DishServiceImpl implements DishService {
         dish.setDishIngredients(new HashSet<>());
         dish.setFirebaseId(firebaseId);
 
-        for (IngredientIdQuantityDTO dto : dishIngredientDTO.getIngredientIdQuantityList()) {
-            Ingredient ingredient = dto.getIngredientId() != null ?
-                    ingredientRepository.findByIngredientIdAndFirebaseId(dto.getIngredientId(), firebaseId)
-                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with id " + dto.getIngredientId() + " not found")) :
-                    ingredientRepository.findByIngredientNameAndFirebaseId(dto.getIngredientName(), firebaseId)
-                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with name " + dto.getIngredientName() + " not found"));
+        if (dishIngredientDTO.getIngredientIdQuantityList() != null) {
+            for (IngredientIdQuantityDTO dto : dishIngredientDTO.getIngredientIdQuantityList()) {
+                Ingredient ingredient = dto.getIngredientId() != null ?
+                        ingredientRepository.findByIngredientIdAndFirebaseId(dto.getIngredientId(), firebaseId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with id " + dto.getIngredientId() + " not found")) :
+                        ingredientRepository.findByIngredientNameAndFirebaseId(dto.getIngredientName(), firebaseId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with name " + dto.getIngredientName() + " not found"));
 
-            DishIngredient dishIngredient = new DishIngredient(
-                    new DishIngredientId(dish.getDishId(), ingredient.getIngredientId()),
-                    dto.getQuantity(),
-                    dish,
-                    ingredient
-            );
-            dish.getDishIngredients().add(dishIngredient);
+                DishIngredient dishIngredient = new DishIngredient(
+                        new DishIngredientId(dish.getDishId(), ingredient.getIngredientId()),
+                        dto.getQuantity(),
+                        dish,
+                        ingredient
+                );
+                dish.getDishIngredients().add(dishIngredient);
+            }
         }
         return dishRepository.save(dish);
     }

@@ -61,9 +61,6 @@ public class DishRecordServiceImpl implements DishRecordService {
     @Transactional
     @Override
     public DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dto) {
-        dishRecordRepository.findByDishRecordIdAndFirebaseId(dishRecordId, getCurrentUserFirebaseId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DishRecord with id " + dishRecordId + " not found"));
-
         dto.getDishRecord().setDishRecordId(dishRecordId);
         return saveDishRecord(dto);
     }
@@ -93,6 +90,7 @@ public class DishRecordServiceImpl implements DishRecordService {
     }
 
     private void revertIngredientStock(DishRecord oldRecord) {
+        if (oldRecord.getDishRecordIngredients() == null) return;
         for (DishRecordIngredient ri : oldRecord.getDishRecordIngredients()) {
             Ingredient ingredient = ri.getIngredient();
             ingredient.setIngredientStorage(ingredient.getIngredientStorage() + ri.getDishRecordIngredientQuantity());
@@ -103,6 +101,7 @@ public class DishRecordServiceImpl implements DishRecordService {
     private void processIngredients(DishRecordIngredientDTO dto, DishRecord record, String firebaseId) {
         record.setDishRecordIngredients(new HashSet<>());
 
+        if (dto.getIngredientIdQuantityList() == null) return;
         for (IngredientIdQuantityDTO item : dto.getIngredientIdQuantityList()) {
             Ingredient ingredient = item.getIngredientId() != null ?
                     ingredientRepository.findByIngredientIdAndFirebaseId(item.getIngredientId(), firebaseId)
