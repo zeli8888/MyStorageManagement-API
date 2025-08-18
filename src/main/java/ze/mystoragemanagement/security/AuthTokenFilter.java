@@ -34,14 +34,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        if (isPublicPath(request)) {
+        if (request.getMethod().equals("OPTIONS") || isPublicPath(request)) {
             filterChain.doFilter(request, response);
             return;
         }
         try {
             String token = parseJwt(request);
             if (token != null) {
-                FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(token, true);
+                boolean checkRevoked = !request.getMethod().equals("GET");
+                FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(token, checkRevoked);
                 Authentication authentication = new FirebaseAuthenticationToken(
                         firebaseToken.getUid(),
                         firebaseToken.getClaims()

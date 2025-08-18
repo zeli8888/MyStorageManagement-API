@@ -2,7 +2,7 @@ package ze.mystoragemanagement.security;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = FirebaseConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class FirebaseConfigurationTest {
+public class FirebaseConfigurationTest {
 
     @Autowired
     private FirebaseApp firebaseApp;
@@ -24,11 +24,9 @@ class FirebaseConfigurationTest {
     @Autowired
     private FirebaseAuth firebaseAuth;
 
-    @AfterEach
-    void cleanup() {
-        if (firebaseApp != null) {
-            firebaseApp.delete();
-        }
+    @AfterAll
+    public static void cleanup() {
+        FirebaseApp.getApps().forEach(FirebaseApp::delete);
     }
 
     @Test

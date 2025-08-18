@@ -1,5 +1,9 @@
 package ze.mystoragemanagement.dto;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
 import ze.mystoragemanagement.model.DishRecord;
 import ze.mystoragemanagement.model.Views;
@@ -14,6 +18,8 @@ import java.util.List;
  */
 
 
+@Setter
+@Getter
 public class DishRecordPage {
     @JsonView(Views.DishRecordView.class)
     private List<DishRecord> content;
@@ -38,44 +44,5 @@ public class DishRecordPage {
         this.totalElements = page.getTotalElements();
     }
 
-    public List<DishRecord> getContent() {
-        return content;
-    }
-
-    public void setContent(List<DishRecord> content) {
-        this.content = content;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public long getTotalElements() {
-        return totalElements;
-    }
-
-    public void setTotalElements(long totalElements) {
-        this.totalElements = totalElements;
-    }
 }
 
