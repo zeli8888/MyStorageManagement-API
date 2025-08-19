@@ -35,3 +35,8 @@ build/
 *~
 ### keys ###
 firebase-private-key.json
+
+### database ###
+*.sqlite
+*.db
+*.sql
