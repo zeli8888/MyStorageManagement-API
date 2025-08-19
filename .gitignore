@@ -34,7 +34,7 @@ build/
 ### temporary files ###
 *~
 ### keys ###
-firebase-private-key.json
+secrets/firebase-private-key.json
 
 ### database ###
 *.sqlite

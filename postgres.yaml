@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:17.6
+    container_name: storage-management-postgres
+    ports:
+      - 6688:5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - network
+    environment:
+      - POSTGRES_PASSWORD=${MYSQL_PASSWORD}
+      - POSTGRES_DB=storage-management
+      - POSTGRES_USER=postgres
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  pg-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${STORAGE_MANAGEMENT_POSTGRES_VOLUME}
+#  docker-compose -p storage-management -f postgres.yaml up -d

@@ -1,0 +1,26 @@
+services:
+
+  storage-management-api:
+    image: zeli8888/storage-management-api:${version}
+    container_name: storage-management-api
+    ports:
+      - 8001:8000
+    volumes:
+      - storage-management-secrets:/home/storage-management-api/secrets/
+    networks:
+      - network
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - STORAGE_MANAGEMENT_POSTGRES_URL=jdbc:postgresql://storage-management-postgres:5432/storage-management
+
+networks:
+  network:
+    driver: bridge
+    
+volumes:
+  storage-management-secrets:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${STORAGE_MANAGEMENT_SECRETS}
+      o: bind
