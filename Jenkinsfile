@@ -11,7 +11,7 @@ pipeline{
       steps{
         sh script: 'docker stop storage-management-postgres', returnStatus: true
         sh script: 'docker rm storage-management-postgres', returnStatus: true
-        sh 'docker-compose -p storage-management -f postgres.yaml up -d --force-recreate'
+        sh 'docker compose -p storage-management -f postgres.yaml up -d --force-recreate'
       }
     }
 
@@ -41,7 +41,7 @@ pipeline{
       steps{
         sh script: 'docker stop storage-management-api', returnStatus: true
         sh script: 'docker rm storage-management-api || true', returnStatus: true
-        sh "export version=${version} && docker-compose -p storage-management -f storage-management-api.yaml up -d --force-recreate"
+        sh "export version=${version} && docker compose -p storage-management -f storage-management-api.yaml up -d --force-recreate"
       }
     }
   }
