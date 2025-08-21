@@ -1,6 +1,9 @@
 pipeline{
 
   agent any
+  tools {
+  maven 'Maven'
+  }
   environment {
     version = '1.0'
     DB_PASSWORD = credentials('DB_PASSWORD')
