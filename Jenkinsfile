@@ -3,6 +3,9 @@ pipeline{
   agent any
   environment {
     version = '1.0'
+    DB_PASSWORD = credentials('DB_PASSWORD')
+    STORAGE_MANAGEMENT_SECRETS = credentials('STORAGE_MANAGEMENT_SECRETS')
+    STORAGE_MANAGEMENT_POSTGRES_VOLUME = credentials('STORAGE_MANAGEMENT_POSTGRES_VOLUME')
   }
 
   stages{

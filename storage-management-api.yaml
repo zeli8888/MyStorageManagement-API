@@ -10,7 +10,7 @@ services:
     networks:
       - network
     environment:
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - DB_PASSWORD=${DB_PASSWORD}
       - STORAGE_MANAGEMENT_POSTGRES_URL=jdbc:postgresql://storage-management-postgres:5432/storage-management
 
 networks:
