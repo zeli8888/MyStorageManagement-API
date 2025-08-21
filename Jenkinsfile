@@ -23,7 +23,10 @@ pipeline{
 
     stage('Test and Build'){
       steps{
-        sh 'mvn clean package'
+        sh '''
+          MAVEN_OPTS="-Xms256m -Xmx512m -Dlog.level=WARN" \
+          mvn clean package -Dsurefire.forkCount=1 -Dsurefire.reuseForks=false -T 1
+        '''
       }
     }
 
