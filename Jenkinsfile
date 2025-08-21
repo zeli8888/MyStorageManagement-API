@@ -21,14 +21,7 @@ pipeline{
       }
     }
 
-    stage('Test'){
-      steps{
-        sh 'mvn clean'
-        sh 'mvn test'
-      }
-    }
-
-    stage('Build'){
+    stage('Test and Build'){
       steps{
         sh 'mvn clean package'
       }
