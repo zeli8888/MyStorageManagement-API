@@ -44,10 +44,10 @@ public class Ingredient {
     private String ingredientName;
 
     @JsonView(Views.DishRecordView.class)
-    private Long ingredientStorage;
+    private Double ingredientStorage;
 
     @JsonView(Views.DishRecordView.class)
-    private Long ingredientCost;
+    private Double ingredientCost;
 
     @JsonView(Views.DishRecordView.class)
     private String ingredientDesc;

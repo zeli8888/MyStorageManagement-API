@@ -81,8 +81,8 @@ public class AuthenticationTest {
 
         Ingredient newIngredient = new Ingredient(1L,
                 "Flour",
-                500L,
-                1L,
+                500.0,
+                1.0,
                 "Flour 1 euro per kg",
                 null,
                 null,

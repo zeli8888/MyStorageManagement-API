@@ -1,5 +1,9 @@
 package ze.mystoragemanagement.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ze.mystoragemanagement.model.Dish;
 
 /**
@@ -8,32 +12,12 @@ import ze.mystoragemanagement.model.Dish;
  * @Version : V1.0
  * @Description :
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DishIngredientDTO {
     private Dish dish;
     private IngredientIdQuantityDTO[] ingredientIdQuantityList;
-
-    public Dish getDish() {
-        return dish;
-    }
-
-    public void setDish(Dish dish) {
-        this.dish = dish;
-    }
-
-    public IngredientIdQuantityDTO[] getIngredientIdQuantityList() {
-        return ingredientIdQuantityList;
-    }
-
-    public void setIngredientIdQuantityList(IngredientIdQuantityDTO[] ingredientIdQuantityList) {
-        this.ingredientIdQuantityList = ingredientIdQuantityList;
-    }
-
-    public DishIngredientDTO() {
-    }
-
-    public DishIngredientDTO(Dish dish, IngredientIdQuantityDTO[] ingredientIdQuantityList) {
-        this.dish = dish;
-        this.ingredientIdQuantityList = ingredientIdQuantityList;
-    }
 }
 

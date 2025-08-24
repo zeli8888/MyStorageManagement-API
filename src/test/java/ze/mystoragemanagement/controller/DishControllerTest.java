@@ -59,7 +59,7 @@ class DishControllerTest {
 
         dishIngredientDTO = new DishIngredientDTO(
                 dishes.get(0),
-                new IngredientIdQuantityDTO[]{new IngredientIdQuantityDTO(1L, 2L)}
+                new IngredientIdQuantityDTO[]{new IngredientIdQuantityDTO(1L, 2.0)}
         );
     }
 

@@ -70,8 +70,8 @@ class DishRecordServiceImplTest {
 
         // Initialize test DTO
         List<IngredientIdQuantityDTO> ingredients = Arrays.asList(
-                new IngredientIdQuantityDTO(1L, 5L),
-                new IngredientIdQuantityDTO(2L, 10L)
+                new IngredientIdQuantityDTO(1L, 5.0),
+                new IngredientIdQuantityDTO(2L, 10.0)
         );
         testDTO = new DishRecordIngredientDTO(testRecord, ingredients.toArray(new IngredientIdQuantityDTO[0]));
     }
@@ -119,7 +119,7 @@ class DishRecordServiceImplTest {
     void createDishRecord_Success() {
         when(firebaseSecurityContextId.getCurrentFirebaseId()).thenReturn(TEST_FIREBASE_ID);
         Ingredient ingredient = new Ingredient();
-        ingredient.setIngredientStorage(5L);
+        ingredient.setIngredientStorage(5.0);
         when(ingredientRepository.findByIngredientIdAndFirebaseId(anyLong(), anyString()))
                 .thenReturn(Optional.of(ingredient));
         when(dishRepository.findByDishNameAndFirebaseId(anyString(), anyString()))
@@ -135,12 +135,12 @@ class DishRecordServiceImplTest {
     @Test
     void createDishRecord_IngredientName() {
         IngredientIdQuantityDTO[] ingredientIdQuantityDTOS = new IngredientIdQuantityDTO[1];
-        ingredientIdQuantityDTOS[0] = new IngredientIdQuantityDTO(5L, "test ingredient");
+        ingredientIdQuantityDTOS[0] = new IngredientIdQuantityDTO(5.0, "test ingredient");
         testDTO.setIngredientIdQuantityList(ingredientIdQuantityDTOS);
 
         when(firebaseSecurityContextId.getCurrentFirebaseId()).thenReturn(TEST_FIREBASE_ID);
         Ingredient ingredient = new Ingredient();
-        ingredient.setIngredientStorage(5L);
+        ingredient.setIngredientStorage(5.0);
         when(ingredientRepository.findByIngredientNameAndFirebaseId(anyString(), anyString()))
                 .thenReturn(Optional.of(ingredient));
         when(dishRepository.findByDishNameAndFirebaseId(anyString(), anyString()))
@@ -183,12 +183,12 @@ class DishRecordServiceImplTest {
     void updateDishRecord_StockRevertVerification() {
         // Prepare existing ingredient with quantity
         Ingredient existingIngredient = new Ingredient();
-        existingIngredient.setIngredientStorage(10L);
+        existingIngredient.setIngredientStorage(10.0);
 
         // Prepare existing record
         DishRecord existingRecord = new DishRecord();
         DishRecordIngredient ri = new DishRecordIngredient(
-                new DishRecordIngredientId(1L, 1L), 3L, existingRecord, existingIngredient
+                new DishRecordIngredientId(1L, 1L), 3.0, existingRecord, existingIngredient
         );
         existingRecord.setDishRecordIngredients(new HashSet<>(Collections.singletonList(ri)));
 
@@ -202,7 +202,7 @@ class DishRecordServiceImplTest {
         ArgumentCaptor<Ingredient> captor = ArgumentCaptor.forClass(Ingredient.class);
 
         IngredientIdQuantityDTO[] ingredientIdQuantityDTOS = new IngredientIdQuantityDTO[1];
-        ingredientIdQuantityDTOS[0] = new IngredientIdQuantityDTO(1L, 5L);
+        ingredientIdQuantityDTOS[0] = new IngredientIdQuantityDTO(1L, 5.0);
         dishRecordService.updateDishRecord(1L, new DishRecordIngredientDTO(testRecord, ingredientIdQuantityDTOS));
 
         // revert and update
@@ -215,7 +215,7 @@ class DishRecordServiceImplTest {
     void updateDishRecord_NoRevert() {
         // Prepare existing ingredient with quantity
         Ingredient existingIngredient = new Ingredient();
-        existingIngredient.setIngredientStorage(10L);
+        existingIngredient.setIngredientStorage(10.0);
 
         // Prepare existing record
         DishRecord existingRecord = new DishRecord();
@@ -294,7 +294,7 @@ class DishRecordServiceImplTest {
     void saveDishRecord_IngredientNameNotFound() {
         testRecord.setDish(null);  // Clear dish reference
         IngredientIdQuantityDTO[] ingredientIdQuantityDTOS = new IngredientIdQuantityDTO[1];
-        ingredientIdQuantityDTOS[0] = new IngredientIdQuantityDTO(5L, "test ingredient");
+        ingredientIdQuantityDTOS[0] = new IngredientIdQuantityDTO(5.0, "test ingredient");
         testDTO.setIngredientIdQuantityList(ingredientIdQuantityDTOS);
 
         when(firebaseSecurityContextId.getCurrentFirebaseId()).thenReturn(TEST_FIREBASE_ID);

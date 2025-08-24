@@ -53,8 +53,8 @@ class DishServiceImplTest {
 
         // Initialize DTO with valid data
         List<IngredientIdQuantityDTO> ingredients = Arrays.asList(
-                new IngredientIdQuantityDTO(1L, 2L),
-                new IngredientIdQuantityDTO(2L, 3L)
+                new IngredientIdQuantityDTO(1L, 2.0),
+                new IngredientIdQuantityDTO(2L, 3.0)
         );
         dishIngredientDTO = new DishIngredientDTO(testDish, ingredients.toArray(new IngredientIdQuantityDTO[0]));
     }

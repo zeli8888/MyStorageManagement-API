@@ -24,7 +24,7 @@ public class DishIngredient {
     @EmbeddedId
     @JsonIgnore
     private DishIngredientId dishIngredientId;
-    private Long dishIngredientQuantity;
+    private Double dishIngredientQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("dishId")

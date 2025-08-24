@@ -46,7 +46,7 @@ class IngredientServiceImplTest {
         testIngredient = new Ingredient();
         testIngredient.setIngredientId(1L);
         testIngredient.setIngredientName("Flour");
-        testIngredient.setIngredientStorage(500L);
+        testIngredient.setIngredientStorage(500.0);
         testIngredient.setFirebaseId(TEST_FIREBASE_ID);
     }
 
@@ -140,7 +140,7 @@ class IngredientServiceImplTest {
 
         Ingredient updated = new Ingredient();
         updated.setIngredientName("Premium Flour");
-        updated.setIngredientStorage(1000L);
+        updated.setIngredientStorage(1000.0);
 
         Ingredient result = ingredientService.updateIngredient(1L, updated);
 

@@ -97,8 +97,8 @@ class DishRecordControllerTest {
                         "firebase-789"
                 ),
                 new IngredientIdQuantityDTO[] {
-                        new IngredientIdQuantityDTO(101L, 2L),
-                        new IngredientIdQuantityDTO(102L, 3L)
+                        new IngredientIdQuantityDTO(101L, 2.0),
+                        new IngredientIdQuantityDTO(102L, 3.0)
                 }
         );
     }

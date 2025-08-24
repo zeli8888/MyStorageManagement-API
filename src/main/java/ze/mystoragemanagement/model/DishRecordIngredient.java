@@ -27,7 +27,7 @@ public class DishRecordIngredient {
     @JsonIgnore
     private DishRecordIngredientId dishRecordIngredientId;
     @JsonView(Views.DishRecordView.class)
-    private Long dishRecordIngredientQuantity;
+    private Double dishRecordIngredientQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("dishRecordId")
