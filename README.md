@@ -1,8 +1,7 @@
 # 📦 Storage Management API
 
-**StorageManagementApp** is a responsive web application designed to help you manage food storage. 
-Always forget how much you left in the fridge like me? This app can help you keep track of it and record 
-your meals. 🎉
+**[StorageManagementApp](https://zeli8888.ddns.net/storage-management/)** is a responsive web application designed to help you manage food storage. 
+Always forget how much you left in the fridge like me? This app can help you keep track of it and record your meals. 🎉
 
 **Frontend Repository**: https://github.com/zeli8888/MyStorageManagement.git
 
