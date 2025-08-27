@@ -1,5 +1,6 @@
 package ze.mystoragemanagement.service.impl;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,8 @@ import static org.mockito.Mockito.*;
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 class DishRecordServiceImplTest {
-
+    @Mock
+    private EntityManager entityManager;
     @Mock
     private IngredientRepository ingredientRepository;
     @Mock
@@ -206,6 +208,7 @@ class DishRecordServiceImplTest {
         dishRecordService.updateDishRecord(1L, new DishRecordIngredientDTO(testRecord, ingredientIdQuantityDTOS));
 
         // revert and update
+        verify(entityManager).detach(existingRecord);
         verify(ingredientRepository, times(2)).save(captor.capture());
         // original 10 storage, consume 3 on record, change record to 5 --> 8 as new storage
         assertEquals(8L, captor.getAllValues().get(1).getIngredientStorage()); // Verify stock revert

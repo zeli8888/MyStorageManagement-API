@@ -1,5 +1,7 @@
 package ze.mystoragemanagement.service.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ import java.util.HashSet;
  */
 @Service
 public class DishRecordServiceImpl implements DishRecordService {
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private IngredientRepository ingredientRepository;
     @Autowired
@@ -76,6 +80,7 @@ public class DishRecordServiceImpl implements DishRecordService {
             DishRecord oldRecord = dishRecordRepository.findByDishRecordIdAndFirebaseId(recordId, firebaseId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DishRecord with id " + recordId + " not found"));
             revertIngredientStock(oldRecord);
+            entityManager.detach(oldRecord);
         }
 
         // verify dish exists, set dish from database
