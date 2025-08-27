@@ -171,10 +171,12 @@ class IngredientServiceImplTest {
 
         ingredientService.deleteIngredients(Collections.singletonList(1L));
 
-        verify(ingredientRepository).deleteAllByIdInAndFirebaseId(
+        verify(ingredientRepository).findAllByIdInAndFirebaseId(
                 Collections.singletonList(1L),
                 TEST_FIREBASE_ID
         );
+
+        verify(ingredientRepository).deleteAll(any());
     }
 
     @Test

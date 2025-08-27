@@ -1,7 +1,6 @@
 package ze.mystoragemanagement.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,9 +23,8 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     Optional<Ingredient> findByIngredientIdAndFirebaseId(Long id, String firebaseId);
     Optional<Ingredient> findByIngredientNameAndFirebaseId(String name, String firebaseId);
 
-    @Modifying
-    @Query("DELETE FROM Ingredient i WHERE i.ingredientId IN :ids AND i.firebaseId = :firebaseId")
-    void deleteAllByIdInAndFirebaseId(@Param("ids") Collection<Long> ids,
+    @Query("SELECT DISTINCT i FROM Ingredient i WHERE i.ingredientId IN :ids AND i.firebaseId = :firebaseId")
+    List<Ingredient> findAllByIdInAndFirebaseId(@Param("ids") Collection<Long> ids,
                                       @Param("firebaseId") String firebaseId);
 
     @Query("SELECT DISTINCT i FROM Ingredient i " +

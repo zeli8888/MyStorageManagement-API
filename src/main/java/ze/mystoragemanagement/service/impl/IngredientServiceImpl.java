@@ -52,7 +52,8 @@ public class IngredientServiceImpl implements IngredientService {
     @Transactional
     public void deleteIngredients(Collection<Long> ids) {
         String firebaseId = getCurrentUserFirebaseId();
-        ingredientRepository.deleteAllByIdInAndFirebaseId(ids, firebaseId);
+        List<Ingredient> ingredients = ingredientRepository.findAllByIdInAndFirebaseId(ids, firebaseId);
+        ingredientRepository.deleteAll(ingredients);
     }
 
     @Override

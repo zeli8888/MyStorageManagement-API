@@ -3,11 +3,9 @@ package ze.mystoragemanagement.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ze.mystoragemanagement.model.Dish;
 import ze.mystoragemanagement.model.DishRecord;
 
 import java.util.Collection;
@@ -25,9 +23,9 @@ import java.util.Optional;
 public interface DishRecordRepository extends JpaRepository<DishRecord, Long> {
     Page<DishRecord> findAllByFirebaseId(String firebaseId, Pageable pageable);
     Optional<DishRecord> findByDishRecordIdAndFirebaseId(Long dishRecordId, String firebaseId);
-    @Modifying
-    @Query("DELETE FROM DishRecord dr WHERE dr.dishRecordId IN :ids AND dr.firebaseId = :firebaseId")
-    void deleteAllByIdInAndFirebaseId(@Param("ids") Collection<Long> ids,
+
+    @Query("SELECT DISTINCT dr FROM DishRecord dr WHERE dr.dishRecordId IN :ids AND dr.firebaseId = :firebaseId")
+    List<DishRecord> findAllByIdInAndFirebaseId(@Param("ids") Collection<Long> ids,
                                       @Param("firebaseId") String firebaseId);
 
     @Query("SELECT DISTINCT dr FROM DishRecord dr " +

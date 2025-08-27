@@ -17,6 +17,7 @@ import ze.mystoragemanagement.security.FirebaseSecurityContextId;
 import ze.mystoragemanagement.service.DishRecordService;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 //import jakarta.persistence.EntityManager;
 //import jakarta.persistence.PersistenceContext;
 //import org.hibernate.engine.spi.EntityKey;
@@ -139,7 +140,8 @@ public class DishRecordServiceImpl implements DishRecordService {
     @Transactional
     public void deleteDishRecords(Collection<Long> dishRecordIds) {
         if (!dishRecordIds.isEmpty()) {
-            dishRecordRepository.deleteAllByIdInAndFirebaseId(dishRecordIds, getCurrentUserFirebaseId());
+            List<DishRecord> records = dishRecordRepository.findAllByIdInAndFirebaseId(dishRecordIds, getCurrentUserFirebaseId());
+            dishRecordRepository.deleteAll(records);
         }
     }
 

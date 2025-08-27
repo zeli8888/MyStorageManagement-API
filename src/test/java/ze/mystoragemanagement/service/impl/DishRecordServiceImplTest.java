@@ -249,18 +249,18 @@ class DishRecordServiceImplTest {
         when(firebaseSecurityContextId.getCurrentFirebaseId()).thenReturn(TEST_FIREBASE_ID);
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
-        doNothing().when(dishRecordRepository).deleteAllByIdInAndFirebaseId(anyCollection(), anyString());
-
+        when(dishRecordRepository.findAllByIdInAndFirebaseId(anyCollection(), anyString())).thenReturn(Collections.singletonList(testRecord));
+        doNothing().when(dishRecordRepository).deleteAll(anyCollection());
         dishRecordService.deleteDishRecords(Collections.singletonList(1L));
 
-        verify(dishRecordRepository).deleteAllByIdInAndFirebaseId(anyCollection(), captor.capture());
+        verify(dishRecordRepository).findAllByIdInAndFirebaseId(anyCollection(), captor.capture());
         assertEquals(TEST_FIREBASE_ID, captor.getValue());
     }
 
     @Test
     void deleteDishRecords_Null() {
         dishRecordService.deleteDishRecords(Collections.emptySet());
-        verify(dishRecordRepository, times(0)).deleteAllByIdInAndFirebaseId(anyCollection(), anyString());
+        verify(dishRecordRepository, times(0)).findAllByIdInAndFirebaseId(anyCollection(), anyString());
     }
 
     // Search Tests
