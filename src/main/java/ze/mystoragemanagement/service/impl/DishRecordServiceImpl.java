@@ -1,7 +1,5 @@
 package ze.mystoragemanagement.service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +15,12 @@ import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.security.FirebaseSecurityContextId;
 import ze.mystoragemanagement.service.DishRecordService;
-
 import java.util.Collection;
 import java.util.HashSet;
-
+//import jakarta.persistence.EntityManager;
+//import jakarta.persistence.PersistenceContext;
+//import org.hibernate.engine.spi.EntityKey;
+//import org.hibernate.engine.spi.SharedSessionContractImplementor;
 /**
  * @Author : Ze Li
  * @Date : 12/02/2025 15:44
@@ -29,8 +29,8 @@ import java.util.HashSet;
  */
 @Service
 public class DishRecordServiceImpl implements DishRecordService {
-    @PersistenceContext
-    private EntityManager entityManager;
+//    @PersistenceContext
+//    private EntityManager entityManager;
     @Autowired
     private IngredientRepository ingredientRepository;
     @Autowired
@@ -80,7 +80,8 @@ public class DishRecordServiceImpl implements DishRecordService {
             DishRecord oldRecord = dishRecordRepository.findByDishRecordIdAndFirebaseId(recordId, firebaseId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DishRecord with id " + recordId + " not found"));
             revertIngredientStock(oldRecord);
-            entityManager.detach(oldRecord);
+            // NO NEED TO DETACH
+//            entityManager.detach(oldRecord);
         }
 
         // verify dish exists, set dish from database
@@ -89,6 +90,11 @@ public class DishRecordServiceImpl implements DishRecordService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dish with name " + record.getDish().getDishName() + " not found"));
             record.setDish(dish);
         }
+
+        // DEBUG ONLY
+//        SharedSessionContractImplementor session = entityManager.unwrap(SharedSessionContractImplementor.class);
+//        org.hibernate.engine.spi.PersistenceContext context = session.getPersistenceContext();
+//        Map<EntityKey,Object> entities = context.getEntitiesByKey();
 
         processIngredients(dto, record, firebaseId);
         return dishRecordRepository.save(record);
@@ -120,7 +126,7 @@ public class DishRecordServiceImpl implements DishRecordService {
 
             // add link to record
             DishRecordIngredient ri = new DishRecordIngredient(
-                    new DishRecordIngredientId(ingredient.getIngredientId(), record.getDishRecordId()),
+                    new DishRecordIngredientId(record.getDishRecordId(), ingredient.getIngredientId()),
                     item.getQuantity(),
                     record,
                     ingredient
