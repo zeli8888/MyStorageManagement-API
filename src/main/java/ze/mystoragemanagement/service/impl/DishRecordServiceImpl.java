@@ -197,10 +197,7 @@ public class DishRecordServiceImpl implements DishRecordService {
             Double storage = ingredientSummaryDTO.getIngredient().getIngredientStorage();
             if (storage != null) {
                 Double dailyUsage = ingredientSummaryDTO.getDailyUsage();
-                double supplyDays = 0;
-                if (dailyUsage == 0) supplyDays = 365;
-                else if (storage < 0) supplyDays = storage * dailyUsage;
-                else supplyDays = storage / dailyUsage;
+                double supplyDays = dailyUsage == 0 ? 365 : storage / dailyUsage;
                 ingredientSummaryDTO.setSupplyDays(BigDecimal.valueOf(supplyDays).setScale(2, RoundingMode.HALF_UP).doubleValue());
             };
 

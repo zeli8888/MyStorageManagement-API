@@ -15,8 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
-import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
-import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
+import ze.mystoragemanagement.dto.*;
 import ze.mystoragemanagement.model.*;
 import ze.mystoragemanagement.repository.DishRecordRepository;
 import ze.mystoragemanagement.repository.DishRepository;
@@ -24,6 +23,7 @@ import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.security.FirebaseSecurityContextId;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -304,5 +304,60 @@ class DishRecordServiceImplTest {
                 () -> dishRecordService.createDishRecord(testDTO));
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    }
+
+    @Test
+    void getDishRecordAnalysis() {
+        ZonedDateTime start = ZonedDateTime.parse("2024-01-01T00:00:00Z");
+        ZonedDateTime end = ZonedDateTime.parse("2024-01-03T23:59:59Z");
+        int expectedDays = 3;
+
+        testRecord.setDishRecordTime(ZonedDateTime.parse("2024-01-02T08:00:00Z"));
+        DishRecord testRecord2 = new DishRecord();
+        testRecord2.setDishRecordTime(ZonedDateTime.parse("2024-01-02T00:00:00Z"));
+        testRecord2.setDishRecordId(2L);
+        testRecord2.setDishRecordDesc("Test Record 2");
+        testRecord2.setFirebaseId(TEST_FIREBASE_ID);
+
+        // normal ingredient with full info
+        Ingredient ingredient1 = new Ingredient(1L, "Egg",
+                1.0, 0.5, "test egg", null, null,
+                TEST_FIREBASE_ID);
+        DishRecordIngredient dishRecordIngredient1 = new DishRecordIngredient(new DishRecordIngredientId(2L, 1L), 0.5, testRecord2, ingredient1);
+
+        // record with 0 quantity consumed
+        Ingredient ingredient2 = new Ingredient(2L, "Meat",
+                1.0, 1.0, "test meat", null, null,
+                TEST_FIREBASE_ID);
+        DishRecordIngredient dishRecordIngredient2 = new DishRecordIngredient(new DishRecordIngredientId(2L, 2L), 0.0, testRecord2, ingredient2);
+
+        // ingredient with null storage
+        Ingredient ingredient3 = new Ingredient(3L, "Bread",
+                null, 1.0, "test bread", null, null,
+                TEST_FIREBASE_ID);
+        DishRecordIngredient dishRecordIngredient3 = new DishRecordIngredient(new DishRecordIngredientId(2L, 3L), 0.5, testRecord2, ingredient3);
+
+        // ingredient with null cost
+        Ingredient ingredient4 = new Ingredient(4L, "Milk",
+                1.0, null, "test milk", null, null,
+                TEST_FIREBASE_ID);
+        DishRecordIngredient dishRecordIngredient4 = new DishRecordIngredient(new DishRecordIngredientId(2L, 4L), 0.5, testRecord2, ingredient4);
+
+        testRecord2.setDishRecordIngredients(Set.of(dishRecordIngredient1, dishRecordIngredient2, dishRecordIngredient3, dishRecordIngredient4));
+
+        List<DishRecord> records = new ArrayList<>();
+        records.add(testRecord);
+        records.add(testRecord2);
+
+        when(firebaseSecurityContextId.getCurrentFirebaseId()).thenReturn(TEST_FIREBASE_ID);
+        when(dishRecordRepository.findAllByDishRecordTimeBetweenAndFirebaseId(any(), any(), eq(TEST_FIREBASE_ID))).thenReturn(records);
+        DishRecordAnalysisDTO result = dishRecordService.getDishRecordAnalysis(start, end);
+
+        assertEquals(expectedDays, ChronoUnit.DAYS.between(start, end) + 1);
+        List<IngredientSummaryDTO> ingredients = result.getIngredientsSummary();
+        assertEquals(4, ingredients.size());
+
+        List<DishSummaryDTO> dishes = result.getDishesSummary();
+        assertEquals(1, dishes.size());
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.MethodParameter;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.Collections;
 import java.util.Map;
@@ -21,11 +24,42 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
 
+    private static class Method {
+        public void dummy(@RequestParam Long id) {}
+    }
     @InjectMocks
     private GlobalExceptionHandler exceptionHandler;
 
     @Mock
     private MethodArgumentNotValidException methodArgumentNotValidException;
+
+    @Test
+    void handleMethodArgumentMisMatchException_ShouldReturn400Response() throws NoSuchMethodException {
+        // Arrange
+        Object invalidValue = "invalidValue";
+        String paramName = "id";
+        String errorMessage = String.format("Invalid value '%s' for parameter '%s'", invalidValue, paramName);
+
+        MethodArgumentTypeMismatchException ex = new MethodArgumentTypeMismatchException(
+                invalidValue,
+                Long.class,
+                paramName,
+                new MethodParameter(Method.class.getDeclaredMethod("dummy", Long.class), 0),
+                new Exception()
+        );
+
+        // Act
+        ResponseEntity<GlobalExceptionHandler.ErrorResponse> response =
+                exceptionHandler.handleTypeMismatch(ex);
+
+        // Assert
+        assertResponseStructure(
+                response,
+                HttpStatus.BAD_REQUEST,
+                "invalid_parameter",
+                errorMessage
+        );
+    }
 
     @Test
     void handleResourceNotFound_ShouldReturn404Response() {

@@ -19,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import ze.mystoragemanagement.dto.DishRecordAnalysisDTO;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
 import ze.mystoragemanagement.model.Dish;
@@ -188,5 +189,26 @@ class DishRecordControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recordIds)))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getDishRecordAnalysis() throws Exception {
+        ZonedDateTime startTime = ZonedDateTime.parse("2024-03-20T00:00:00+08:00");
+        ZonedDateTime endTime = ZonedDateTime.parse("2024-03-20T23:59:59+08:00");
+        DishRecordAnalysisDTO analysis = new DishRecordAnalysisDTO();
+        when(dishRecordService.getDishRecordAnalysis(startTime, endTime)).thenReturn(analysis);
+
+        mockMvc.perform(get("/dishrecords/analysis")
+                        .param("startTime", "2024-03-20T00:00:00+08:00")
+                        .param("endTime", "2024-03-20T23:59:59+08:00"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getDishRecordAnalysisBadTime() throws Exception {
+        mockMvc.perform(get("/dishrecords/analysis")
+                        .param("startTime", "2024-03-20T00:00:00+08:00")
+                        .param("endTime", "2024-03-19T23:59:59+08:00"))
+                .andExpect(status().isBadRequest());
     }
 }

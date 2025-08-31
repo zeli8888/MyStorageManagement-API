@@ -25,6 +25,7 @@ Always forget how much you left in the fridge like me? This app can help you kee
     - complete CRUD service for ingredient/dish/dishRecord
     - enforced constraint for relationship between ingredient/dish/dishRecord
     - update ingredients storage automatically with dishRecord
+    - cost/consume analysis for custom time range 
 
 - **Firebase Authentication Integration🪪**
     - JWT verification for scalable server-side authentication
