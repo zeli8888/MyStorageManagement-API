@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +22,25 @@ import java.util.stream.Collectors;
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    // handle type mismatch
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String errorMessage = String.format(
+                "Invalid value '%s' for parameter '%s'",
+                ex.getValue(),
+                ex.getName()
+        );
+
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse(
+                        Instant.now(),
+                        "invalid_parameter",
+                        errorMessage,
+                        null
+                ));
+    }
+
 
     // handle resource not found
     @ExceptionHandler(EmptyResultDataAccessException.class)

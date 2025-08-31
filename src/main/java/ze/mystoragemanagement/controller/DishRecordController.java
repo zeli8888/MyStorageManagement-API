@@ -1,13 +1,18 @@
 package ze.mystoragemanagement.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ze.mystoragemanagement.dto.DishRecordAnalysisDTO;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.dto.DishRecordPage;
 import ze.mystoragemanagement.model.DishRecord;
@@ -15,6 +20,7 @@ import ze.mystoragemanagement.model.Views;
 import ze.mystoragemanagement.service.DishRecordService;
 
 import java.net.URI;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -24,6 +30,7 @@ import java.util.List;
  * @Description :
  */
 
+@Validated
 @RestController
 public class DishRecordController {
     @Autowired
@@ -77,4 +84,10 @@ public class DishRecordController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/dishrecords/analysis")
+    @JsonView(Views.DishRecordView.class)
+    public ResponseEntity<DishRecordAnalysisDTO> getDishRecordAnalysis(@RequestParam @NotNull ZonedDateTime startTime, @RequestParam @NotNull ZonedDateTime endTime) {
+        if (startTime.isAfter(endTime)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start time must be before end time.");
+        return ResponseEntity.ok(dishRecordService.getDishRecordAnalysis(startTime, endTime));
+    }
 }

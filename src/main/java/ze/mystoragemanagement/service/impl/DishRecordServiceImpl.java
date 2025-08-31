@@ -7,17 +7,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
-import ze.mystoragemanagement.dto.IngredientIdQuantityDTO;
+import ze.mystoragemanagement.dto.*;
 import ze.mystoragemanagement.model.*;
 import ze.mystoragemanagement.repository.DishRecordRepository;
 import ze.mystoragemanagement.repository.DishRepository;
 import ze.mystoragemanagement.repository.IngredientRepository;
 import ze.mystoragemanagement.security.FirebaseSecurityContextId;
 import ze.mystoragemanagement.service.DishRecordService;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 //import jakarta.persistence.EntityManager;
 //import jakarta.persistence.PersistenceContext;
 //import org.hibernate.engine.spi.EntityKey;
@@ -148,5 +150,67 @@ public class DishRecordServiceImpl implements DishRecordService {
     @Override
     public Page<DishRecord> searchDishRecords(String searchString, Pageable pageable) {
         return dishRecordRepository.searchDishRecordsByFirebaseId(searchString, getCurrentUserFirebaseId(), pageable);
+    }
+
+    @Override
+    public DishRecordAnalysisDTO getDishRecordAnalysis(ZonedDateTime startTime, ZonedDateTime endTime) {
+        List<DishRecord> records = dishRecordRepository.findAllByDishRecordTimeBetweenAndFirebaseId(startTime, endTime, getCurrentUserFirebaseId());
+
+        DishRecordAnalysisDTO analysis = new DishRecordAnalysisDTO();
+        analysis.setStartTime(startTime);
+        analysis.setEndTime(endTime);
+        long days = ChronoUnit.DAYS.between(startTime, endTime) + 1;
+
+        HashMap<Long, IngredientSummaryDTO> ingredientSummaryMap = new HashMap<>();
+        HashMap<Long, DishSummaryDTO> dishSummaryMap = new HashMap<>();
+
+        for (DishRecord record : records) {
+            for (DishRecordIngredient ri : record.getDishRecordIngredients()) {
+                Ingredient ingredient = ri.getIngredient();
+                IngredientSummaryDTO ingredientSummaryDTO = ingredientSummaryMap.getOrDefault(
+                        ingredient.getIngredientId(), new IngredientSummaryDTO(ingredient, 0.0, 0.0, 0.0, 0.0)
+                );
+                if (ingredient.getIngredientCost() != null){
+                    ingredientSummaryDTO.setTotalCost(ingredientSummaryDTO.getTotalCost() + ri.getDishRecordIngredientQuantity() * ingredient.getIngredientCost());
+                }
+                ingredientSummaryDTO.setTotalUsage(ingredientSummaryDTO.getTotalUsage() + ri.getDishRecordIngredientQuantity());
+                ingredientSummaryMap.put(ingredient.getIngredientId(), ingredientSummaryDTO);
+            }
+
+            Dish dish = record.getDish();
+            if (dish == null) continue;
+            DishSummaryDTO dishSummaryDTO = dishSummaryMap.getOrDefault(
+                    dish.getDishId(), new DishSummaryDTO(dish, 0)
+            );
+            dishSummaryDTO.setTotalUsage(dishSummaryDTO.getTotalUsage() + 1);
+            dishSummaryMap.put(dish.getDishId(), dishSummaryDTO);
+        }
+
+        ArrayList<IngredientSummaryDTO> ingredientsSummary = new ArrayList<>(ingredientSummaryMap.values());
+        ingredientsSummary.forEach(ingredientSummaryDTO -> {
+            ingredientSummaryDTO.setDailyUsage(
+                    BigDecimal.valueOf(ingredientSummaryDTO.getTotalUsage()).divide(
+                            BigDecimal.valueOf(days), 2, RoundingMode.HALF_UP
+                    ).doubleValue()
+            );
+
+            Double storage = ingredientSummaryDTO.getIngredient().getIngredientStorage();
+            if (storage != null) {
+                Double dailyUsage = ingredientSummaryDTO.getDailyUsage();
+                double supplyDays = 0;
+                if (dailyUsage == 0) supplyDays = 365;
+                else if (storage < 0) supplyDays = storage * dailyUsage;
+                else supplyDays = storage / dailyUsage;
+                ingredientSummaryDTO.setSupplyDays(BigDecimal.valueOf(supplyDays).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            };
+
+            ingredientSummaryDTO.setTotalCost(
+                    BigDecimal.valueOf(ingredientSummaryDTO.getTotalCost()).setScale(2, RoundingMode.HALF_UP).doubleValue()
+            );
+        });
+
+        analysis.setIngredientsSummary(ingredientsSummary);
+        analysis.setDishesSummary(new ArrayList<>(dishSummaryMap.values()));
+        return analysis;
     }
 }

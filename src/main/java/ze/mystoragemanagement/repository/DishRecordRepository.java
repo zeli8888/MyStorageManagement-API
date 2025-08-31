@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ze.mystoragemanagement.model.DishRecord;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -41,4 +42,6 @@ public interface DishRecordRepository extends JpaRepository<DishRecord, Long> {
     Page<DishRecord> searchDishRecordsByFirebaseId(@Param("searchString") String searchString,
                                                    @Param("firebaseId") String firebaseId,
                                                    Pageable pageable);
+
+    List<DishRecord> findAllByDishRecordTimeBetweenAndFirebaseId(ZonedDateTime startTime, ZonedDateTime endTime, String firebaseId);
 }

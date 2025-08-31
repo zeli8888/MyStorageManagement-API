@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class DishRecordIngredient {
     @JsonIgnore
     private DishRecordIngredientId dishRecordIngredientId;
     @JsonView(Views.DishRecordView.class)
+    @NotNull
     private Double dishRecordIngredientQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)

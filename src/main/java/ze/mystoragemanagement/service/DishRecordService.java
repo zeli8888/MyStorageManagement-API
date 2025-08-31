@@ -2,9 +2,11 @@ package ze.mystoragemanagement.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import ze.mystoragemanagement.dto.DishRecordAnalysisDTO;
 import ze.mystoragemanagement.dto.DishRecordIngredientDTO;
 import ze.mystoragemanagement.model.DishRecord;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 
 /**
@@ -21,4 +23,5 @@ public interface DishRecordService {
     DishRecord updateDishRecord(Long dishRecordId, DishRecordIngredientDTO dishRecordIngredientDTO);
     void deleteDishRecords(Collection<Long> dishRecordIds);
     Page<DishRecord> searchDishRecords(String searchString, Pageable pageable);
+    DishRecordAnalysisDTO getDishRecordAnalysis(ZonedDateTime startTime, ZonedDateTime endTime);
 }
