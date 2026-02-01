@@ -7,8 +7,8 @@ pipeline{
   environment {
     version = '1.0'
     DB_PASSWORD = credentials('DB_PASSWORD')
-    STORAGE_MANAGEMENT_SECRETS = credentials('STORAGE_MANAGEMENT_SECRETS')
     STORAGE_MANAGEMENT_POSTGRES_VOLUME = credentials('STORAGE_MANAGEMENT_POSTGRES_VOLUME')
+    FIREBASE_CREDENTIALS_FILE = "/var/lib/jenkins/my-project-secrets/firebase-private-key.json"
   }
 
   stages{

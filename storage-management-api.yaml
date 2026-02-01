@@ -6,7 +6,7 @@ services:
     ports:
       - 8001:8000
     volumes:
-      - storage-management-secrets:/home/storage-management-api/secrets/
+      - ${FIREBASE_CREDENTIALS_FILE:-./firebase-private-key.json}:/home/storage-management-api/secrets/firebase-private-key.json:ro
     networks:
       - network
     environment:
@@ -16,11 +16,3 @@ services:
 networks:
   network:
     driver: bridge
-    
-volumes:
-  storage-management-secrets:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${STORAGE_MANAGEMENT_SECRETS}
-      o: bind
