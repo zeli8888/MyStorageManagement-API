@@ -53,8 +53,8 @@ Always forget how much you left in the fridge like me? This app can help you kee
     ```env
     STORAGE_MANAGEMENT_POSTGRES_URL=your_database_url
     DB_PASSWORD=your_database_password
-    STORAGE_MANAGEMENT_POSTGRES_VOLUME=your_expected_database_container_volume_url
-    STORAGE_MANAGEMENT_SECRETS=your_expected_folder_url_for_firebase_private_key
+    STORAGE_MANAGEMENT_POSTGRES_VOLUME=your_database_container_volume_url
+    FIREBASE_CREDENTIALS_FILE=your_file_url_for_firebase_private_key
     ```
 
 ### 🔧 Installation

@@ -6,7 +6,7 @@ services:
     ports:
       - 8001:8000
     volumes:
-      - ${FIREBASE_CREDENTIALS_FILE:-./firebase-private-key.json}:/home/storage-management-api/secrets/firebase-private-key.json:ro
+      - ${FIREBASE_CREDENTIALS_FILE:-./secrets/firebase-private-key.json}:/home/storage-management-api/secrets/firebase-private-key.json:ro
     networks:
       - network
     environment:
